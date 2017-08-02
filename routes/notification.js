@@ -1,7 +1,9 @@
 var express = require('express'),
     fs = require('fs');
 var router = express.Router();
-var debug = require('debug')('cmxwebhistorian:server');
+var path = require('path');
+
+var dataDir = './public/data/';
 
 /* GET notification page. */
 router.get('/', function(req, res, next) {
@@ -12,7 +14,11 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res) {
   console.log(req.body);
 
-  fs.appendFile('./public/data/data.json', JSON.stringify(req.body), function () {
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+  }
+
+  fs.appendFile(path.join(dataDir, 'data.json'), JSON.stringify(req.body), function () {
       res.send('ECHO: ' + JSON.stringify(req.body));
   });
 });
