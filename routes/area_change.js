@@ -3,6 +3,7 @@ var express = require('express'),
 var router = express.Router();
 var path = require('path');
 var sql = require('mssql/msnodesqlv8');
+// var sqlc = require('../js/sqlconnector.js');
 
 var config = {
   driver: 'msnodesqlv8',
@@ -11,19 +12,19 @@ var config = {
 
 var dataDir = './public/data/'
 
-const parameter = 'Location_NotificationJson';
-const sp = 'Location_NotificationInsertJson';
+const parameter = 'Area_ChangeJson';
+const sp = 'Area_ChangeInsertJson';
 
 /* GET notification page. */
 router.get('/', function(req, res, next) {
-  res.render('notification', { title: 'Notifications' });
+  res.render('notification', { title: 'Area Change' });
 });
 
 /* POST Notification from CMX */
 router.post('/', function(req, res) {
   var dt = new Date();
   var utcDate = dt.toUTCString();
-  console.log(utcDate + " -- POST to notification received.")
+  console.log(utcDate + " -- POST to area_change received.")
 
   // if (!fs.existsSync(dataDir)) {
   //   fs.mkdirSync(dataDir);
@@ -33,9 +34,12 @@ router.post('/', function(req, res) {
 
   json = body.substring(18, body.lastIndexOf('}')-1);
 
+  // Commented out until the sqlconnector.js is working
+  // sqlc.ExecuteSP(sp, parameter, json);
+
   // console.log(json);
 
-  // fs.appendFile(path.join(dataDir, 'data.json'), json + '\n');
+  // fs.appendFile(path.join(dataDir, 'area_change.json'), json + '\n');
 
   const pool = new sql.ConnectionPool(config, err => {
     pool.request()
