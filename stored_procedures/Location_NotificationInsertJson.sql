@@ -14,7 +14,15 @@ AS BEGIN
 			[locationCoordinateY] float 'lax $.locationCoordinate.y',
 			[locationCoordinateZ] float 'lax $.locationCoordinate.z',
 			[locationCoordinateUnit] nvarchar(64) 'lax $.locationCoordinate.unit',
+<<<<<<< HEAD
 			[geoCoordinateLat] float 'lax $.geoCoordinate.lattitude',
+=======
+<<<<<<< HEAD
+			[geoCoordinateLat] float 'lax $.geoCoordinate."lattitude"',
+=======
+			[geoCoordinateLat] float 'lax $.geoCoordinate.lattitude',
+>>>>>>> 084f6e7f64581a5ddefd74077b6bc70250148db9
+>>>>>>> d7f995494c957c29628e24cf6349ecb819c67c43
 			[geoCoordinateLong] float 'lax $.geoCoordinate.longitude',
 			[geoCoordinateUnit] nvarchar(64) 'lax $.geoCoordinate.unit',
 			[confidenceFactor] int 'lax $.confidenceFactor',
