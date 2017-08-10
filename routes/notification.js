@@ -58,6 +58,27 @@ router.post('/', function(req, res) {
       if (err) {
         console.log(err);
       }
+
+      pool.request()
+        .input(parameter, sql.VarChar(8000), json)
+        .execute('Location_CVT_Insert', (err) => {
+          // ... error checks
+          if (err) {
+            console.log(err);
+            var dt = new Date();
+            var utcDate = dt.toUTCString();
+            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' failed.'
+          }
+          else {
+            var dt = new Date();
+            var utcDate = dt.toUTCString();
+            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' was successful.'
+          }
+          console.log(result);
+        });
+        if (err) {
+          console.log(err);
+        }
   });
 });
 
