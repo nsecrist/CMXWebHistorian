@@ -3,5 +3,12 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    include ../node_modules/pug-bootstrap/_bootstrap.pug
   body
+    block navbar
+        +navbar("JCE Dashboard", "dropdown_menu")
+          +nav_item("./") Home
+          +nav_item_dropdown("#")(label="Dashboards")
+            +nav_item("./test") Test
+          +nav_item("") Login
     block content

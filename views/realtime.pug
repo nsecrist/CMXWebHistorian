@@ -1,0 +1,21 @@
+doctype html
+html
+	head
+		title Basic Embed
+		script(type='text/javascript', src='https://public.tableau.com/javascripts/api/tableau-2.min.js')
+		script(type='text/javascript').
+			function initViz() {
+			var containerDiv = document.getElementById("vizContainer"),
+			// url = "http://public.tableau.com/views/RegionalSampleWorkbook/Storms,
+			url = "http://10.4.201.16:8000/views/Test/Sheet4",
+			options = {
+			hideTabs: true,
+			onFirstInteractive: function () {
+			console.log("Run this code when the viz has finished loading.");
+			}
+			};
+			var viz = new tableau.Viz(containerDiv, url, options);
+			// Create a viz object and embed it in the container div.
+			}
+	body(onload='initViz();')
+		#vizContainer(style='width:800px; height:700px;')

@@ -11,7 +11,9 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var notification = require('./routes/notification');
 var person = require('./routes/person');
-var areaChange = require ('./routes/area_change')
+var areaChange = require ('./routes/area_change');
+var realTime = require ('./routes/real_time');
+var test = require ('./routes/test');
 
 var app = express();
 
@@ -34,6 +36,8 @@ app.use('/users', users);
 app.use('/notification', notification);
 app.use('/person', person);
 app.use('/area_change', areaChange);
+app.use('/realtime', realTime);
+app.use('/test', test);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
