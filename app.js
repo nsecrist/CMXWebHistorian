@@ -14,6 +14,7 @@ var person = require('./routes/person');
 var areaChange = require ('./routes/area_change');
 var realTime = require ('./routes/real_time');
 var test = require ('./routes/test');
+var apiV1 = require ('./routes/api/v1');
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use('/person', person);
 app.use('/area_change', areaChange);
 app.use('/realtime', realTime);
 app.use('/test', test);
+app.use('/tas/api/v1', apiV1);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
