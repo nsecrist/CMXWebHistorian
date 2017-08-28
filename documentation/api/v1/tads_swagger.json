@@ -194,9 +194,6 @@ definitions:
         example: "Jacobs"
 # Added by API Auto Mocking Plugin
 # host: 10.4.201.17:3000
-# basePath: /TADS/api/v1
+# basePath: http://10.4.201.17:3000/tas/api/v1
 schemes:
  - https
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /JCE/TADS/1.0.0

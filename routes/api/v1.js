@@ -18,7 +18,7 @@ const pool = new sql.ConnectionPool(config, err => {
 
 /* GET API Docs. */
 router.get('/docs', function(req, res, next) {
-  res.render('doc2', { title : "TADS API v1" });
+  res.render('doc', { title : "TADS API v1" });
   // res.sendfile('index.html', { root : path.join(__dirname, '../public') });
 });
 
