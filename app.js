@@ -39,7 +39,7 @@ app.use('/person', person);
 app.use('/area_change', areaChange);
 app.use('/realtime', realTime);
 app.use('/test', test);
-app.use('/tas/api/v1', apiV1);
+app.use('/tads/api/v1', apiV1);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
