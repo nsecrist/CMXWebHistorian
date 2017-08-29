@@ -22,17 +22,6 @@ router.get('/docs', function(req, res, next) {
   // res.sendfile('index.html', { root : path.join(__dirname, '../public') });
 });
 
-/*
-GET: /tas/api/v1/personnel
-GET: /tas/api/v1/personnel/{pid}
-
-POST: /tas/api/v1/associate
-Arguments in body: pId, macAddress
-
-POST: /tas/api/v1/unassociate
-Arguments in body: macAddress
-*/
-
 /* Gets all records in JCE_Personnel */
 router.get('/personnel', function (req, res) {
   sql.connect(config, err => {
@@ -75,6 +64,38 @@ router.get('/personnel/:id', function (req, res) {
         })
     }
   })
+})
+
+/* Inserts a new Personnel Record into the TADS database */
+router.post('/personnel', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+    person = req.body;
+
+    
+
+    sql.connect(config, err => {
+      if(err) {
+        res.status(500).send('Error connecting to database. Error: ' + err.stack);
+      }
+      else {
+        new sql.Request()
+          .input('json', sql.VarChar(8000), person)
+          .execute('person_insert', (err) => {
+            if (err) {
+              res.status(500).send('Error making sql request: ' + err.stack);
+              sql.close();
+            }
+            else {
+              res.status(201).send('POST to Associate Successful!');
+              sql.close();
+            }
+          })
+      }
+    })
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?')
+  }
 })
 
 /* Inserts or Updates the Associated status for given MAC and PID */
