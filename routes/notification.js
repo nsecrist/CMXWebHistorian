@@ -25,9 +25,9 @@ router.post('/', function(req, res) {
   var utcDate = dt.toUTCString();
   console.log(utcDate + " -- POST to notification received.")
 
-  // if (!fs.existsSync(dataDir)) {
-  //   fs.mkdirSync(dataDir);
-  // }
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+  }
 
   body = JSON.stringify(req.body);
 
@@ -35,7 +35,7 @@ router.post('/', function(req, res) {
 
   // console.log(json);
 
-  // fs.appendFile(path.join(dataDir, 'data.json'), json + '\n');
+  fs.appendFile(path.join(dataDir, 'data.json'), body + '\n');
 
   const pool = new sql.ConnectionPool(config, err => {
     pool.request()
@@ -80,6 +80,7 @@ router.post('/', function(req, res) {
           console.log(err);
         }
   });
+  res.sendStatus(200);
 });
 
 module.exports = router;

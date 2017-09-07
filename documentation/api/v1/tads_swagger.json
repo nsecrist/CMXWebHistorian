@@ -192,7 +192,6 @@ definitions:
       Company:
         type: string
         example: "Jacobs"
-# Added by API Auto Mocking Plugin
 # host: 10.4.201.17:3000
 # basePath: http://10.4.201.17:3000/tas/api/v1
 schemes:
