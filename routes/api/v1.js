@@ -4,6 +4,8 @@ var sql = require('mssql/msnodesqlv8');
 var path = require('path');
 // var bodyParser = require('body-parser');
 
+var validator = require('../../src/tads_validator.js');
+
 var config = {
   driver: 'msnodesqlv8'
   ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE};Trusted_Connection={yes};'
@@ -22,17 +24,6 @@ router.get('/docs', function(req, res, next) {
   // res.sendfile('index.html', { root : path.join(__dirname, '../public') });
 });
 
-/*
-GET: /tas/api/v1/personnel
-GET: /tas/api/v1/personnel/{pid}
-
-POST: /tas/api/v1/associate
-Arguments in body: pId, macAddress
-
-POST: /tas/api/v1/unassociate
-Arguments in body: macAddress
-*/
-
 /* Gets all records in JCE_Personnel */
 router.get('/personnel', function (req, res) {
   sql.connect(config, err => {
@@ -46,7 +37,7 @@ router.get('/personnel', function (req, res) {
           sql.close();
         }
         else {
-          res.status(200).send(result.recordset);
+          res.status(200).send(result.recordset[0]);
           sql.close();
         }
       })
@@ -77,6 +68,117 @@ router.get('/personnel/:id', function (req, res) {
   })
 })
 
+/* Inserts a new Personnel Record into the TADS database */
+router.post('/subcontractor', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+    var person = req.body;
+    var v = validator.subcontractor(person);
+
+    if (v.valid) {
+      jsonString = JSON.stringify(v.person);
+      sql.connect(config, err => {
+        if(err) {
+          res.status(500).send('Error connecting to database. Error: ' + err.stack);
+        }
+        else {
+          new sql.Request()
+            .input('json', sql.VarChar(8000), jsonString)
+            .execute('person_insert', (err) => {
+              if (err) {
+                res.status(500).send('Error making sql request: ' + err.stack);
+                sql.close();
+              }
+              else {
+                res.status(200).send('POST to subcontractor Successful!');
+                sql.close();
+              }
+            })
+        }
+      })
+    }
+    else {
+      res.status(400).send('Error with JSON body format! ' + v.err)
+    }
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?')
+  }
+})
+
+/* Inserts a new Personnel Record into the TADS database */
+router.post('/visitor', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+    var person = req.body;
+    var v = validator.visitor(person);
+
+    if (v.valid) {
+      jsonString = JSON.stringify(v.person);
+      sql.connect(config, err => {
+        if(err) {
+          res.status(500).send('Error connecting to database. Error: ' + err.stack);
+        }
+        else {
+          new sql.Request()
+            .input('json', sql.VarChar(8000), jsonString)
+            .execute('person_insert', (err) => {
+              if (err) {
+                res.status(500).send('Error making sql request: ' + err.stack);
+                sql.close();
+              }
+              else {
+                res.status(200).send('POST to visitor Successful!');
+                sql.close();
+              }
+            })
+        }
+      })
+    }
+    else {
+      res.status(400).send('Error with JSON body format! ' + v.err)
+    }
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?')
+  }
+})
+
+/* Inserts a new Personnel Record into the TADS database */
+router.post('/client', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+    var person = req.body;
+    var v = validator.client(person);
+
+    if (v.valid) {
+      jsonString = JSON.stringify(v.person);
+      sql.connect(config, err => {
+        if(err) {
+          res.status(500).send('Error connecting to database. Error: ' + err.stack);
+        }
+        else {
+          new sql.Request()
+            .input('json', sql.VarChar(8000), jsonString)
+            .execute('person_insert', (err) => {
+              if (err) {
+                res.status(500).send('Error making sql request: ' + err.stack);
+                sql.close();
+              }
+              else {
+                res.status(200).send('POST to client Successful!');
+                sql.close();
+              }
+            })
+        }
+      })
+    }
+    else {
+      res.status(400).send('Error with JSON body format! ' + v.err)
+    }
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?')
+  }
+})
+
 /* Inserts or Updates the Associated status for given MAC and PID */
 router.post('/associate', function (req, res) {
 
@@ -90,7 +192,7 @@ router.post('/associate', function (req, res) {
       else {
         new sql.Request()
           .input('mac', sql.VarChar(12), associate.mac_address)
-          .input('pid', sql.Int, associate.pid)
+          .input('pid', sql.Int, associate.jce_pid)
           .input('date', sql.DateTime, new Date())
           .execute('associate', (err) => {
             if (err) {
@@ -98,7 +200,7 @@ router.post('/associate', function (req, res) {
               sql.close();
             }
             else {
-              res.status(201).send('POST to Associate Successful!');
+              res.status(200).send('POST to Associate Successful!');
               sql.close();
             }
           })
@@ -129,7 +231,7 @@ router.post('/unassociate', function (req, res) {
               sql.close();
             }
             else {
-              res.status(201).send('POST to Unassociate Successful!');
+              res.status(200).send('POST to Unassociate Successful!');
               sql.close();
             }
           })
