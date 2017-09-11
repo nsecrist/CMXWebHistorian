@@ -89,7 +89,7 @@ router.post('/subcontractor', function (req, res) {
                 sql.close();
               }
               else {
-                res.status(201).send('POST to subcontractor Successful!');
+                res.status(200).send('POST to subcontractor Successful!');
                 sql.close();
               }
             })
@@ -126,7 +126,7 @@ router.post('/visitor', function (req, res) {
                 sql.close();
               }
               else {
-                res.status(201).send('POST to visitor Successful!');
+                res.status(200).send('POST to visitor Successful!');
                 sql.close();
               }
             })
@@ -163,7 +163,7 @@ router.post('/client', function (req, res) {
                 sql.close();
               }
               else {
-                res.status(201).send('POST to client Successful!');
+                res.status(200).send('POST to client Successful!');
                 sql.close();
               }
             })
@@ -200,7 +200,7 @@ router.post('/associate', function (req, res) {
               sql.close();
             }
             else {
-              res.status(201).send('POST to Associate Successful!');
+              res.status(200).send('POST to Associate Successful!');
               sql.close();
             }
           })
@@ -231,7 +231,7 @@ router.post('/unassociate', function (req, res) {
               sql.close();
             }
             else {
-              res.status(201).send('POST to Unassociate Successful!');
+              res.status(200).send('POST to Unassociate Successful!');
               sql.close();
             }
           })

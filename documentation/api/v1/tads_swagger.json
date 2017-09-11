@@ -63,6 +63,51 @@ paths:
               $ref: '#/definitions/Person'
           500:
             description: Generic SQL Error
+  /subcontractor:
+    post:
+      tags:
+      - Personnel
+      summary: Adds a new person as a subcontractor to the personnel table
+      operationId: addSub
+      description: |
+        Creates a new person with personnel role of 'Sub'.
+      responses:
+        200:
+          description: POST to Subcontractor Successful!
+        400:
+          description: Content-type header was not set to JSON
+        500:
+          description: Generic SQL Error
+  /visitor:
+    post:
+      tags:
+      - Personnel
+      summary: Adds a new person as a visitor to the personnel table
+      operationId: addVisitor
+      description: |
+        Creates a new person with personnel role of 'Visitor'.
+      responses:
+        200:
+          description: POST to Visitor Successful!
+        400:
+          description: Content-type header was not set to JSON
+        500:
+          description: Generic SQL Error
+  /client:
+    post:
+      tags:
+      - Personnel
+      summary: Adds a new person as a client to the personnel table
+      operationId: addClient
+      description: |
+        Creates a new person with personnel role of 'Client'.
+      responses:
+        200:
+          description: POST to Client Successful!
+        400:
+          description: Content-type header was not set to JSON
+        500:
+          description: Generic SQL Error
   /Associate:
     post:
       tags:
@@ -72,7 +117,7 @@ paths:
       description: |
         Associates the provided MAC Address with the provided JCE_PID
       responses:
-        201:
+        200:
           description: POST to Associate Successful!
         400:
           description: Content-type header was not set to JSON
@@ -87,27 +132,42 @@ paths:
       description: |
         Unassociates the provided MAC Address
       responses:
-        201:
+        200:
           description: POST to Associate Successful!
         400:
           description: Content-type header was not set to JSON
         500:
           description: Generic SQL Error
 definitions:
+  AssociateTag:
+    description: "JSON Object that should be sent on POST requests to Associate and Unassociate"
+    type: object
+    required:
+    - mac_address
+    - jce_pid
+    properties:
+      mac_address:
+        type: string
+        example: "11:22:33:44:55"
+      jce_pid:
+        type: integer
+        format: Int64
+        example: 1
+        description: Must be a valid jce_pid, call GET /Personnel for a list of all jce_pids
   Person:
     description: "NULL Values will never return from the API. If a field is missing from the JSON object, it's value was NULL"
     type: object
     required:
-    - JCE_PID
-    - PersonnelRole
-    - FirstName
-    - LastName
+    - jce_pid
+    - personnelrole
+    - firstname
+    - lastname
     properties:
-      JCE_PID:
+      jce_pid:
         type: integer
         format: Int64
         example: 1
-      PersonnelRole:
+      personnelrole:
         type: string
         enum: [ "Client"
                 ,"Craft"
@@ -116,80 +176,80 @@ definitions:
                 ,"Visitor"
               ]
         example: "Client"
-      FirstName:
+      firstname:
         type: string
         example: "John"
-      LastName:
+      lastname:
         type: string
         example: "Doe"
-      MiddleName:
+      middlename:
         type: string
         example: "Francis"
-      Suffix:
+      suffix:
         type: string
         example: "Sr."
-      HireDate:
+      hiredate:
         type: string
         example: "2013-09-05 00:00:00.000"
-      LocalJacobsBadgeID:
+      localjacobsbadgeid:
         type: string
         example: "1001"
-      CRCode_FunctionCode:
+      crcode_functioncode:
         type: string
         example: "X208"
-      EmployeeNumber:
+      employeenumber:
         type: string
         example: "051234567"
-      OraclePartyID:
+      oraclepartyid:
         type: string
         example: "3531715"
-      HRJobTitle:
+      hrjobtitle:
         type: string
         example: "CARPENTER 03"
-      LocalJobTitle:
+      localjobtitle:
         type: string
         example: "Carpenter"
         description: NULL very often in the database
-      Department:
+      department:
         type: string
         example: "0000 GENERAL"
         description: Four digit number followed by a string
-      Shift:
+      shift:
         type: string
         example: "1A"
         description: Shift may somteims be a single number
-      Skill:
+      skill:
         type: string
         example: "CAREPENTER"
         description: This field is sometimes NULL
-      Class:
+      class:
         type: string
         example: "CRAFT FOREMAN"
         description: More granular that skill, may help differenciate pay scale
-      CrewCode:
+      crewcode:
         type: string
         example: "I111"
-      Status:
+      status:
         type: string
         example: "Y"
         description: Denotes whether or not the record is an active site employee. "Y" can be interpreted as "Active"
-      JacobsStartDate:
+      jacobsstartdate:
         type: string
         example: "2017-05-04 00:00:00.000"
         description: Date hired on by Jacobs
-      LocationStartDate:
+      locationstartdate:
         type: string
         example: "2015-09-30 00:00:00.000"
         description: Date assigned to location/site. In some cases this date is earlier than JacobsStartDate
-      LocationTermDate:
+      locationtermdate:
         type: string
         example: "2017-06-23 00:00:00.000"
         description: Date terminated from site, value should be NULL unless the person is no longer active
-      DateLastChange:
+      datelastchange:
         type: string
         example: "2017-08-01 00:00:00.000"
         description: Last time this person's record was modified within FTS
-      Company:
+      company:
         type: string
         example: "Jacobs"
 # host: 10.4.201.17:3000

@@ -11,17 +11,20 @@ exports.client = function(input) {
   var err = '';
   var response = {};
 
-  if(input.FirstName == null) {
+  if(input.firstname == null) {
     isValid = false;
     err += ' - Missing FirstName';
   };
-  if(input.LastName == null) {
+  if(input.lastname == null) {
     isValid = false;
     err = ' - Missing LastName';
   };
-  if(input.PersonnelRole != 'Client') {
+  if(input.personnelrole != 'Client') {
     input.person = 'Client'
   };
+  if(input.company != "INEOS") {
+    input.company = "INEOS";
+  }
 
   return response = {
     "valid": isValid,
@@ -43,17 +46,21 @@ exports.subcontractor = function(input) {
   var err = '';
   var response = {};
 
-  if(input.FirstName == null) {
+  if(input.firstname == null) {
     isValid = false;
     err += ' - Missing FirstName';
   };
-  if(input.LastName == null) {
+  if(input.lastname == null) {
     isValid = false;
     err = ' - Missing LastName';
   };
-  if(input.PersonnelRole != 'Sub') {
+  if(input.personnelrole != 'Sub') {
     input.person = 'Sub'
   };
+  if(input.company == null) {
+    isValid = false;
+    err = ' - Missing Company';
+  }
 
   return response = {
     "valid": isValid,
@@ -75,15 +82,15 @@ exports.visitor = function(input) {
   var err = '';
   var response = {};
 
-  if(input.FirstName == null) {
+  if(input.firstname == null) {
     isValid = false;
     err += ' - Missing FirstName';
   };
-  if(input.LastName == null) {
+  if(input.lastname == null) {
     isValid = false;
     err = ' - Missing LastName';
   };
-  if(input.PersonnelRole != 'Visitor') {
+  if(input.personnelrole != 'Visitor') {
     input.person = 'Visitor'
   };
 
