@@ -1,10 +1,15 @@
-DROP PROCEDURE IF EXISTS [dbo].[Location_NotificationInsertJson]
+USE [JCE]
 GO
-CREATE PROCEDURE [dbo].[Location_NotificationInsertJson](@Location_NotificationJson NVARCHAR(MAX))
+/****** Object:  StoredProcedure [dbo].[Location_NotificationInsertJson]    Script Date: 9/12/2017 8:03:57 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[Location_NotificationInsertJson](@Location_NotificationJson NVARCHAR(MAX))
 AS BEGIN
 
-	INSERT INTO Location_Notification([subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp])
-	SELECT [subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp]
+	INSERT INTO Location_Notification([subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID])
+	SELECT [subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID]
 	FROM OPENJSON(@Location_NotificationJson)
 		WITH (
 			[subscriptionName] nvarchar(256) 'lax $.subscriptionName',
@@ -29,7 +34,8 @@ AS BEGIN
 			[entity] nvarchar(64) 'lax $.entity',
 			[deviceId] nchar(34) 'lax $.deviceId',
 			[lastSeen] varchar(128) '$.lastSeen',
-			[timestamp] nchar(15) '$.timestamp')
+			[timestamp] nchar(15) '$.timestamp',
+			[JCE_PID] int 'strict $.jce_pid')
 			--[rawX] int '$.rawLocation."rawX"',
 			--[rawY] int '$.rawLocation."rawY"',
 			--[rawUnit] nvarchar(64) '$.rawLocation."unit"')

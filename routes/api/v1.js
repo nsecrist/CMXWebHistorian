@@ -2,15 +2,18 @@ var express = require('express');
 var router = express.Router();
 var sql = require('mssql/msnodesqlv8');
 var path = require('path');
+var db = require('../../src/db.js');
 // var bodyParser = require('body-parser');
 
 var validator = require('../../src/tads_validator.js');
 
-var config = {
-  driver: 'msnodesqlv8'
-  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE};Trusted_Connection={yes};'
-  ,parseJSON: true
-}
+// var config = {
+//   driver: 'msnodesqlv8'
+//   ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE};Trusted_Connection={yes};'
+//   ,parseJSON: true
+// }
+
+var config = db.tads();
 
 const pool = new sql.ConnectionPool(config, err => {
   if (err) {
