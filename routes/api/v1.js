@@ -249,4 +249,66 @@ router.post('/unassociate', function (req, res) {
   }
 })
 
+router.get('/tags/available_tags', function (req, res) {
+  sql.connect(config, err => {
+    if (err) {
+      res.status(500).send('Error connecting to database. Error: ' + err.stack);
+    }
+    else {
+      new sql.Request().query('SELECT * FROM V_JCE_AvailableTags FOR JSON AUTO', (err, result) => {
+        if (err) {
+          res.status(500).send('Error making sql request: ' + err.stack);
+          sql.close();
+        }
+        else {
+          res.status(200).send(result.recordset[0]);
+          sql.close();
+        }
+      })
+    }
+  })
+})
+
+router.get('/tags/current_tags', function (req, res) {
+  sql.connect(config, err => {
+    if (err) {
+      res.status(500).send('Error connecting to database. Error: ' + err.stack);
+    }
+    else {
+      new sql.Request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
+        if (err) {
+          res.status(500).send('Error making sql request: ' + err.stack);
+          sql.close();
+        }
+        else {
+          res.status(200).send(result.recordset[0]);
+          sql.close();
+        }
+      })
+    }
+  })
+})
+
+router.get('/tags/current_tags/status', function (req, res) {
+  sql.connect(config, err => {
+    if (err) {
+      res.status(500).send('Error connecting to database. Error: ' + err.stack);
+    }
+    else {
+      new sql.Request().query('SELECT * FROM V_JCE_CurrentTagStatusCount FOR JSON AUTO', (err, result) => {
+        if (err) {
+          res.status(500).send('Error making sql request: ' + err.stack);
+          sql.close();
+        }
+        else {
+          res.status(200).send(result.recordset[0]);
+          sql.close();
+        }
+      })
+    }
+  })
+})
+
+
+
 module.exports = router;
