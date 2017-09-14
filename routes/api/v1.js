@@ -35,7 +35,7 @@ router.get('/personnel', function (req, res) {
       res.status(500).send('Error connecting to database. Error: ' + err.stack);
     }
     else {
-      new sql.Request().query('SELECT * FROM JCE_Personnel FOR JSON AUTO', (err, result) => {
+      new sql.Request().query('SELECT * FROM JCE_Personnel WHERE LocationTermDate IS NULL FOR JSON AUTO', (err, result) => {
         if (err) {
           res.status(500).send('Error making sql request: ' + err.stack);
           sql.close();
