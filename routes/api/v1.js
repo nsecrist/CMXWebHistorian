@@ -3,6 +3,7 @@ var router = express.Router();
 var sql = require('mssql/msnodesqlv8');
 var path = require('path');
 var db = require('../../src/db.js');
+var pid = require('../../src/pid_lookup.js');
 // var bodyParser = require('body-parser');
 
 var validator = require('../../src/tads_validator.js');
@@ -205,6 +206,7 @@ router.post('/associate', function (req, res) {
             else {
               res.status(200).send('POST to Associate Successful!');
               sql.close();
+              pid.RefreshLookup();
             }
           })
       }
@@ -236,6 +238,7 @@ router.post('/unassociate', function (req, res) {
             else {
               res.status(200).send('POST to Unassociate Successful!');
               sql.close();
+              pid.RefreshLookup();
             }
           })
       }

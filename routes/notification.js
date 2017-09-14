@@ -37,13 +37,12 @@ router.post('/', function(req, res) {
   // Get the notification
   var notification = req.body.notifications[0];
 
-  notification.jce_pid = "-1";
+  // notification.jce_pid = "-1";
+  // body = JSON.stringify(notification);
+
   // Pass in the notification object, and return it with the added jce_pid
   // then stringify the object and use it to call the stored procedure
-  // body = JSON.stringify(pid.lookup(notification));
-
-  body = JSON.stringify(notification);
-
+  body = JSON.stringify(pid.Lookup(notification));
 
   // json = body.substring(18, body.lastIndexOf('}')-1);
 
