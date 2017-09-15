@@ -2,6 +2,7 @@
 // TODO:
 // - Move values to configuration file
 // - Provide a way to programatically change these values
+// - Consolidate the use of the sql related calls to here.
 
 const tads = {
   driver: 'msnodesqlv8'
