@@ -176,6 +176,28 @@ router.post('/client', function (req, res) {
   }
 })
 
+/* Inserts a new status to the JCE_Tag_MasterList table */
+router.post('/tag/status', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+    tag = req.body;
+    apiPool.request()
+      .input('mac', sql.VarChar(12), tag.mac_address)
+      .input('status', sql.VarChar(10), tag.status)
+      .input('date', sql.DateTime, new Date())
+      .query('INSERT INTO JCE_Tag_MasterList (MAC_Address, Tag_Status, StatusDate) VALUES (@mac, @status, @date)', err => {
+        if (err) {
+          res.status(500).send('Error making sql request: ' + err.stack);
+        }
+        else {
+          res.status(200).send('POST to Tag/Status Successful!');
+        }
+      })
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?')
+  }
+})
+
 /* Inserts or Updates the Associated status for given MAC and PID */
 router.post('/associate', function (req, res) {
 
@@ -257,14 +279,14 @@ router.get('/views/current_tags/status', function (req, res) {
 
 router.get('/tags/available_tags', function (req, res) {
   res.status(500).send('DEPRECATED: Use /views/available_tags instead.');
-}
+})
 
 router.get('/tags/current_tags', function (req, res) {
   res.status(500).send('DEPRECATED: Use /views/current_tags instead.');
-}
+})
 
 router.get('/tags/current_tags/status', function (req, res) {
   res.status(500).send('DEPRECATED: Use /views/current_tags/status instead.');
-}
+})
 
 module.exports = router;
