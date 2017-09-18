@@ -1,15 +1,16 @@
 var sql = require('mssql/msnodesqlv8');
 var db = require('./db.js');
 
-// var config = db.tads();
+var config = db.tads();
 
-var config = {
-  driver: 'msnodesqlv8'
-  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE};Trusted_Connection={yes};'
-  ,parseJSON: true
-}
+// var config = {
+//   driver: 'msnodesqlv8'
+//   ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE};Trusted_Connection={yes};'
+//   ,parseJSON: true
+// }
 
-var hTable = {};
+var hTable;
+var initialized = false;
 
 
 /**
@@ -34,6 +35,7 @@ exports.RefreshLookup = function() {
         else {
           // set hTable to query results
           hTable = result.recordset[0];
+          console.log("hTable: " + hTable);
           // res.status(200).send(result.recordset[0]);
           sql.close();
           console.log("Sucessful Hashtable refresh!");
@@ -45,18 +47,42 @@ exports.RefreshLookup = function() {
 }
 
 /**
- * Lookup - Returns the JCE_PID for the supplied DeviceID.
+ * Lookup - Returns a Notification object with the jce.pid attribute added
  *
- * @param  {string} pDeviceID MAC_ADDRESS of the device for lookup
- * @return {string}           Associated PID of DeviceID, NULL if unassociated
+ * @param  {object} pNotification Notification object from CMX
+ * @return {object}           Notification object with jce_pid attribute set
  */
-exports.Lookup = function(pDeviceID) {
-  console.log("In PID.Lookup!");
-  // if (hTable == null) {
-  //   RefreshLookup();
-  // }
-  //
-  // return hTable.pDeviceID;
-  //
-  return "-1";
+exports.Lookup = function(pNotification) {
+  var found = false;
+
+  if (hTable == undefined && initialized == false) {
+    console.log("hTable has not been initialized, doing so now...")
+    this.RefreshLookup();
+    initialized = true;
+  }
+
+  if (hTable != undefined) {
+    for (var i = 0; i < hTable.length; i++) {
+      if (hTable[i].MAC_Address == pNotification.deviceId.replace(/:/g, "").toUpperCase()) {
+        pNotification.jce_pid = hTable[i].JCE_PID;
+        found = true;
+        break;
+      }
+    }
+    //
+    // foreach (tag in hTable) {
+    //   if (tag.deviceId = pNotification.deviceId) {
+    //     pNotification.jce_pid = tag.jce_pid
+    //     found = true;
+    //     break;
+    //   }
+    if (!found) {
+      // console.log("Unable to find jce_pid match!");
+      pNotification.jce_pid = "-1";
+    }
+  } else {
+    console.log("hTable is Undefined, -1 values for everyone!");
+    pNotification.jce_pid = "-1";
+  }
+  return pNotification;
 }
