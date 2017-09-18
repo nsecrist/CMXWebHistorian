@@ -48,7 +48,7 @@ router.get('/personnel/:id', function (req, res) {
         res.status(500).send('Error making sql request: ' + err.stack);
       }
       else {
-        res.status(200).send(result.recordset[0]);
+        res.status(200).send(result.recordset[0][0]);
       }
     })
 })
@@ -89,7 +89,7 @@ function personnelPost(pRes, pV) {
         }
         else {
           // Send status 201 + newly created personnel object in bodyParser
-          pRes.status(201).send(result.recordset[0]);
+          pRes.status(201).send(result.recordset[0][0]);
         }
       })
   }
@@ -222,7 +222,7 @@ router.post('/unassociate', function (req, res) {
   }
 })
 
-router.get('/tags/available_tags', function (req, res) {
+router.get('/views/available_tags', function (req, res) {
   apiPool.request().query('SELECT * FROM V_JCE_AvailableTags FOR JSON AUTO', (err, result) => {
     if (err) {
       res.status(500).send('Error making sql request: ' + err.stack);
@@ -233,7 +233,7 @@ router.get('/tags/available_tags', function (req, res) {
   })
 })
 
-router.get('/tags/current_tags', function (req, res) {
+router.get('/views/current_tags', function (req, res) {
   apiPool.request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
     if (err) {
       res.status(500).send('Error making sql request: ' + err.stack);
@@ -244,7 +244,7 @@ router.get('/tags/current_tags', function (req, res) {
   })
 })
 
-router.get('/tags/current_tags/status', function (req, res) {
+router.get('/views/current_tags/status', function (req, res) {
   apiPool.request().query('SELECT * FROM V_JCE_CurrentTagStatusCount FOR JSON AUTO', (err, result) => {
     if (err) {
       res.status(500).send('Error making sql request: ' + err.stack);
@@ -254,5 +254,17 @@ router.get('/tags/current_tags/status', function (req, res) {
     }
   })
 })
+
+router.get('/tags/available_tags', function (req, res) {
+  res.status(500).send('DEPRECATED: Use /views/available_tags instead.');
+}
+
+router.get('/tags/current_tags', function (req, res) {
+  res.status(500).send('DEPRECATED: Use /views/current_tags instead.');
+}
+
+router.get('/tags/current_tags/status', function (req, res) {
+  res.status(500).send('DEPRECATED: Use /views/current_tags/status instead.');
+}
 
 module.exports = router;
