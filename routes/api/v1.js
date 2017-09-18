@@ -194,28 +194,32 @@ router.post('/tag/status', function (req, res) {
       })
   }
   else {
-    res.status(400).send('Did you forget to set your content-type header to json?')
+    res.status(400).send('Did you forget to set your content-type header to json?');
   }
 })
 
 /* Inserts or Updates the Associated status for given MAC and PID */
 router.post('/associate', function (req, res) {
-
   if (req.get('Content-Type') == 'application/json') {
     associate = req.body;
-    apiPool.request()
-      .input('mac', sql.VarChar(12), associate.mac_address)
-      .input('pid', sql.Int, associate.jce_pid)
-      .input('date', sql.DateTime, new Date())
-      .execute('associate', (err) => {
-        if (err) {
-          res.status(500).send('Error making sql request: ' + err.stack);
-        }
-        else {
-          res.status(200).send('POST to Associate Successful!');
-          pid.RefreshLookup();
-        }
-      })
+    if (!pid.pidAssigned(associate.jce_pid)) {
+      apiPool.request()
+        .input('mac', sql.VarChar(12), associate.mac_address)
+        .input('pid', sql.Int, associate.jce_pid)
+        .input('date', sql.DateTime, new Date())
+        .execute('associate', (err) => {
+          if (err) {
+            res.status(500).send('Error making sql request: ' + err.stack);
+          }
+          else {
+            res.status(200).send('POST to Associate Successful!');
+            pid.RefreshLookup();
+          }
+        })
+    }
+    else {
+      res.status(409).send(associate.jce_pid + ' pid currently has an associated tag, please unassociate before trying again.');
+    }
   }
   else {
     res.status(400).send('Did you forget to set your content-type header to json?')
@@ -223,7 +227,6 @@ router.post('/associate', function (req, res) {
 })
 
 router.post('/unassociate', function (req, res) {
-
   if (req.get('Content-Type') == 'application/json') {
     unassociate = req.body;
     apiPool.request()
@@ -278,15 +281,15 @@ router.get('/views/current_tags/status', function (req, res) {
 })
 
 router.get('/tags/available_tags', function (req, res) {
-  res.status(500).send('DEPRECATED: Use /views/available_tags instead.');
+  res.status(410).send('DEPRECATED: Use /views/available_tags instead.');
 })
 
 router.get('/tags/current_tags', function (req, res) {
-  res.status(500).send('DEPRECATED: Use /views/current_tags instead.');
+  res.status(410).send('DEPRECATED: Use /views/current_tags instead.');
 })
 
 router.get('/tags/current_tags/status', function (req, res) {
-  res.status(500).send('DEPRECATED: Use /views/current_tags/status instead.');
+  res.status(410).send('DEPRECATED: Use /views/current_tags/status instead.');
 })
 
 module.exports = router;

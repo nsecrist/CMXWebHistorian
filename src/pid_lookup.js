@@ -46,11 +46,32 @@ exports.RefreshLookup = function() {
   })
 }
 
+
+/**
+ * pidAssigned - Provides a way to check if a tag is currently assigned to a pid
+ *
+ * @param  {int} pPid     The JCE_PID to look up in the hTable
+ * @return {boolean}      Returns True if the provided pid is already assigned a Tag
+ */
+exports.pidAssigned = function(pPid) {
+  if (hTable != undefined) {
+    for (var i = 0; i < hTable.length; i++) {
+      if (hTable[i].JCE_PID == pPid) {
+        return true;
+      }
+    }
+    return false;
+  }
+  else {
+   return false;
+  }
+}
+
 /**
  * Lookup - Returns a Notification object with the jce.pid attribute added
  *
  * @param  {object} pNotification Notification object from CMX
- * @return {object}           Notification object with jce_pid attribute set
+ * @return {object}               Notification object with jce_pid attribute set
  */
 exports.Lookup = function(pNotification) {
   var found = false;
