@@ -48,10 +48,52 @@ router.get('/personnel/:id', function (req, res) {
         res.status(500).send('Error making sql request: ' + err.stack);
       }
       else {
-        res.status(200).send(result.recordset);
+        res.status(200).send(result.recordset[0]);
       }
     })
 })
+
+router.post('/personnel/:type', function (req, res) {
+  if (req.get('Content-Type') == 'application/json') {
+
+    switch (req.params.type) {
+      case "sub":
+        var v = validator.subcontractor(req.body);
+        personnelPost(res, v);
+        break;
+      case "visitor":
+        var v = validator.visitor(req.body);
+        personnelPost(res, v);
+        break;
+      case "client":
+        var v = validator.client(req.body);
+        personnelPost(res, v);
+        break;
+      default:
+        res.status(400).send('Invalid personnel type parameter: ' + req.params.type);
+        break;
+    }
+  }
+  else {
+    res.status(400).send('Did you forget to set your content-type header to json?');
+  }
+})
+
+function personnelPost(pRes, pV) {
+  if (pV.valid) {
+    jsonString = JSON.stringify(pV.person);
+    apiPool.request().input('json', sql.VarChar(8000), jsonString)
+      .execute('person_insert', (err, result) => {
+        if (err) {
+          pRes.status(500).send('Error making sql request: ' + err.stack);
+        }
+        else {
+          // Send status 201 + newly created personnel object in bodyParser
+          pRes.status(201).send(result.recordset[0]);
+        }
+      })
+  }
+}
 
 /* Inserts a new Personnel Record into the TADS database */
 router.post('/subcontractor', function (req, res) {
@@ -72,11 +114,11 @@ router.post('/subcontractor', function (req, res) {
         })
     }
     else {
-      res.status(400).send('Error with JSON body format! ' + v.err)
+      res.status(400).send('Error with JSON body format! ' + v.err);
     }
   }
   else {
-    res.status(400).send('Did you forget to set your content-type header to json?')
+    res.status(400).send('Did you forget to set your content-type header to json?');
   }
 })
 
