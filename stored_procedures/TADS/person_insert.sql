@@ -31,4 +31,13 @@ AS BEGIN
 			,[DateLastChange] datetime 'lax $.datelastchange'
 			,[Company] varchar(50) 'lax $.company'
 			,[Phone] varchar(20) 'lax $.phone')
+
+	DECLARE @tempId INT
+
+	SELECT @tempId = MAX(JCE_PID) FROM JCE_Personnel
+
+	SELECT *
+	FROM JCE_Personnel
+	WHERE JCE_PID = @tempId
+	FOR JSON AUTO
 END
