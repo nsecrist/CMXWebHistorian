@@ -23,7 +23,7 @@ const apiPool = new sql.ConnectionPool(config, err => {
 });
 
 /* GET API Docs. */
-router.get('/docs', function(req, res, next) {
+router.get('/docs', function(req, res) {
   res.render('doc', { title : "TADS API v1" });
   // res.sendfile('index.html', { root : path.join(__dirname, '../public') });
 });
