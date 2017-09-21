@@ -1,0 +1,454 @@
+swagger: '2.0'
+info:
+  description: >-
+    This is the JCE TADS Web Application API used to interact with the TADS
+    database.
+  version: 1.0.0
+  title: JCE TADS API
+  contact:
+    email: nathan.secrist@jacobs.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Personnel
+    description: Provides Access to Personnel Data
+  - name: Tags
+    description: Provides operations on JCE Tags
+  - name: Views
+    description: Provides data from SQL Views
+paths:
+  /personnel:
+    get:
+      tags:
+        - Personnel
+      summary: Returns an Array containing all Person records
+      operationId: getPersonnel
+      description: Returns all records from the TADS Personnel Table
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/person'
+        '500':
+          description: Generic SQL Error
+  '/personnel/{id}':
+    get:
+      tags:
+        - Personnel
+      summary: Returns a single person matching the pid
+      operationId: getPerson
+      description: Returns a single person record who's JCE_PID matches the parameter
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of person to fetch
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: results matching criteria
+          schema:
+            $ref: '#/definitions/person'
+        '500':
+          description: Generic SQL Error
+  '/addpersonnel/{type}':
+    post:
+      tags:
+        - Personnel
+      summary: Inserts a new personnel of provided type into TADS
+      operationId: addPerson
+      description: Adds a new person to the TADS software of the provided type
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type of person to fetch
+          required: true
+          type: string
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/person'
+        '400':
+          description: Bad Request
+  /subcontractor:
+    post:
+      deprecated: true
+      tags:
+        - Personnel
+      summary: 'DEPRECATED: Use POST: /addpersonnel/{type}'
+      operationId: addSub
+      description: Creates a new person with personnel role of 'Sub'.
+      responses:
+        '200':
+          description: POST to Subcontractor Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '500':
+          description: Generic SQL Error
+  /visitor:
+    post:
+      deprecated: true
+      tags:
+        - Personnel
+      summary: 'DEPRECATED: Use POST: /addpersonnel/{type}'
+      operationId: addVisitor
+      description: Creates a new person with personnel role of 'Visitor'.
+      responses:
+        '200':
+          description: POST to Visitor Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '500':
+          description: Generic SQL Error
+  /client:
+    post:
+      deprecated: true
+      tags:
+        - Personnel
+      summary: 'DEPRECATED: Use POST: /addpersonnel/{type}'
+      operationId: addClient
+      description: Creates a new person with personnel role of 'Client'.
+      responses:
+        '200':
+          description: POST to Client Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '500':
+          description: Generic SQL Error
+  /Associate:
+    post:
+      tags:
+        - Tags
+      summary: Associates a given tag with a given person
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: tag
+          schema:
+            $ref: '#/definitions/tagAssign'
+      responses:
+        '200':
+          description: POST to Associate Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '409':
+          description: Conflict!
+        '500':
+          description: Generic SQL Error
+  /Unassociate:
+    post:
+      tags:
+        - Tags
+      summary: Unassociates a given tag with a given person
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: tag
+          schema:
+            $ref: '#/definitions/tagAssign'
+      responses:
+        '200':
+          description: POST to Associate Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '409':
+          description: Conflict!
+        '500':
+          description: Generic SQL Error
+  /tag/status:
+    post:
+      tags:
+        - Tags
+      summary: Modify the status of a tag
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: tag_status
+          description: The tag_status object to update
+          schema:
+            type: object
+            required:
+              - mac_address
+              - status
+            properties:
+              mac_address:
+                type: string
+                example: '1122334455'
+              status:
+                type: string
+                example: LOST
+      responses:
+        '200':
+          description: POST to Tag/Status Successful!
+        '400':
+          description: Content-type header was not set to JSON
+        '500':
+          description: Generic SQL Error
+  /views/available_tags:
+    get:
+      tags:
+        - Views
+      summary: Provides all available tags
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/tag'
+        '500':
+          description: Generic SQL Error
+  /views/current_tags:
+    get:
+      tags:
+        - Views
+      summary: Provides all assigned tags
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/assignedTag'
+        '500':
+          description: Generic SQL Error
+  /views/all_tags:
+    get:
+      tags:
+        - Views
+      summary: Provides a list of all tags and their current status
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/tag'
+        '500':
+          description: Generic SQL Error
+  /views/all_tags/status:
+    get:
+      tags:
+        - Views
+      summary: Provides a status count of all tags
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/statusCount'
+        '500':
+          description: Generic SQL Error
+definitions:
+  statusCount:
+    description: TADS object returned from all tags status view
+    type: object
+    required:
+      - Status
+      - Status Count
+    properties:
+      Status:
+        type: string
+        enum:
+          - ASSIGNED
+          - AVAILABLE
+          - INACTIVE
+          - LOST
+        example: 'ASSIGNED'
+      Status Count:
+        type: integer
+        example: 1019
+  assignedTag:
+    description: TADS object returned from current tags view
+    type: object
+    required:
+      - MAC_Address
+      - JCE_PID
+    properties:
+      MAC_Address:
+        type: string
+        example: '1122334455'
+      JCE_PID:
+        type: integer
+        example: 1
+      DateAssigned:
+        type: string
+        example: '2017-09-14 16:07:03.137'
+  tag:
+    description: TADS tag object base
+    type: object
+    required:
+      - MAC_Address
+      - Tag_Status
+    properties:
+      MAC_Address:
+        type: string
+        example: '1122334455'
+      Tag_Status:
+        type: string
+        enum:
+          - ASSIGNED
+          - AVAILABLE
+          - INACTIVE
+          - LOST
+        example: 'ASSIGNED'
+      StatusDate:
+        type: string
+        example: '2017-09-14 16:07:03.137'
+  tagAssign:
+    description: >-
+      TADS Tag object for Assignment and Unassignment
+    type: object
+    required:
+      - mac_address
+    properties:
+      mac_address:
+        type: string
+        example: '1122334455'
+      jce_pid:
+        type: integer
+        format: Int64
+        example: 1
+        description: >-
+          Must be a valid jce_pid, call GET /Personnel for a list of all
+          jce_pids
+  person:
+    description: >-
+      NULL Values will never return from the API. If a field is missing from the
+      JSON object, it's value was NULL
+    type: object
+    required:
+      - jce_pid
+      - personnelrole
+      - firstname
+      - lastname
+    properties:
+      jce_pid:
+        type: integer
+        format: Int64
+        example: 1
+      personnelrole:
+        type: string
+        enum:
+          - Client
+          - Craft
+          - Staff
+          - Sub
+          - Visitor
+        example: Client
+      firstname:
+        type: string
+        example: John
+      lastname:
+        type: string
+        example: Doe
+      middlename:
+        type: string
+        example: Francis
+      suffix:
+        type: string
+        example: Sr.
+      hiredate:
+        type: string
+        example: '2013-09-05 00:00:00.000'
+      localjacobsbadgeid:
+        type: string
+        example: '1001'
+      crcode_functioncode:
+        type: string
+        example: X208
+      employeenumber:
+        type: string
+        example: '051234567'
+      oraclepartyid:
+        type: string
+        example: '3531715'
+      hrjobtitle:
+        type: string
+        example: CARPENTER 03
+      localjobtitle:
+        type: string
+        example: Carpenter
+        description: NULL very often in the database
+      department:
+        type: string
+        example: 0000 GENERAL
+        description: Four digit number followed by a string
+      shift:
+        type: string
+        example: 1A
+        description: Shift may somteims be a single number
+      skill:
+        type: string
+        example: CAREPENTER
+        description: This field is sometimes NULL
+      class:
+        type: string
+        example: CRAFT FOREMAN
+        description: 'More granular that skill, may help differenciate pay scale'
+      crewcode:
+        type: string
+        example: I111
+      status:
+        type: string
+        example: 'Y'
+        description: >-
+          Denotes whether or not the record is an active site employee. "Y" can
+          be interpreted as "Active"
+      jacobsstartdate:
+        type: string
+        example: '2017-05-04 00:00:00.000'
+        description: Date hired on by Jacobs
+      locationstartdate:
+        type: string
+        example: '2015-09-30 00:00:00.000'
+        description: >-
+          Date assigned to location/site. In some cases this date is earlier
+          than JacobsStartDate
+      locationtermdate:
+        type: string
+        example: '2017-06-23 00:00:00.000'
+        description: >-
+          Date terminated from site, value should be NULL unless the person is
+          no longer active
+      datelastchange:
+        type: string
+        example: '2017-08-01 00:00:00.000'
+        description: Last time this person's record was modified within FTS
+      company:
+        type: string
+        example: Jacobs
+      MAC_Address:
+        type: string
+        example: '1122334455'
+        description: This property will be NULL if the user is not currently assigned a tag
+      DateAssigned:
+        type: string
+        example: '2017-08-01 00:00:00.000'
+# host: 10.4.201.17:3000
+# basePath: http://10.4.17:3000/tads/api/v1
+schemes:
+  - http

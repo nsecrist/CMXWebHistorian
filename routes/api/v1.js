@@ -30,7 +30,8 @@ router.get('/docs', function(req, res, next) {
 
 /* Gets all records in JCE_Personnel */
 router.get('/personnel', function (req, res) {
-  apiPool.request().query('SELECT * FROM JCE_Personnel WHERE LocationTermDate IS NULL FOR JSON AUTO', (err, result) => {
+  // apiPool.request().query('SELECT * FROM JCE_Personnel WHERE LocationTermDate IS NULL FOR JSON AUTO', (err, result) => {
+  apiPool.request().query(db.personnelQuery(), (err, result) => {
     if (err) {
       res.status(500).send('Error making sql request: ' + err.stack);
     }
@@ -53,7 +54,7 @@ router.get('/personnel/:id', function (req, res) {
     })
 })
 
-router.post('/personnel/:type', function (req, res) {
+router.post('/addpersonnel/:type', function (req, res) {
   if (req.get('Content-Type') == 'application/json') {
 
     switch (req.params.type) {
@@ -97,83 +98,86 @@ function personnelPost(pRes, pV) {
 
 /* Inserts a new Personnel Record into the TADS database */
 router.post('/subcontractor', function (req, res) {
-  if (req.get('Content-Type') == 'application/json') {
-    var person = req.body;
-    var v = validator.subcontractor(person);
-
-    if (v.valid) {
-      jsonString = JSON.stringify(v.person);
-      apiPool.request().input('json', sql.VarChar(8000), jsonString)
-        .execute('person_insert', (err) => {
-          if (err) {
-            res.status(500).send('Error making sql request: ' + err.stack);
-          }
-          else {
-            res.status(200).send('POST to subcontractor Successful!');
-          }
-        })
-    }
-    else {
-      res.status(400).send('Error with JSON body format! ' + v.err);
-    }
-  }
-  else {
-    res.status(400).send('Did you forget to set your content-type header to json?');
-  }
+  res.status(410).send('DEPRECATED: Refernce the API Documentation and use POST: /addpersonnel/{type} instead.')
+  // if (req.get('Content-Type') == 'application/json') {
+  //   var person = req.body;
+  //   var v = validator.subcontractor(person);
+  //
+  //   if (v.valid) {
+  //     jsonString = JSON.stringify(v.person);
+  //     apiPool.request().input('json', sql.VarChar(8000), jsonString)
+  //       .execute('person_insert', (err) => {
+  //         if (err) {
+  //           res.status(500).send('Error making sql request: ' + err.stack);
+  //         }
+  //         else {
+  //           res.status(200).send('POST to subcontractor Successful!');
+  //         }
+  //       })
+  //   }
+  //   else {
+  //     res.status(400).send('Error with JSON body format! ' + v.err);
+  //   }
+  // }
+  // else {
+  //   res.status(400).send('Did you forget to set your content-type header to json?');
+  // }
 })
 
 /* Inserts a new Personnel Record into the TADS database */
 router.post('/visitor', function (req, res) {
-  if (req.get('Content-Type') == 'application/json') {
-    var person = req.body;
-    var v = validator.visitor(person);
-
-    if (v.valid) {
-      jsonString = JSON.stringify(v.person);
-      apiPool.request().input('json', sql.VarChar(8000), jsonString)
-        .execute('person_insert', (err) => {
-          if (err) {
-              res.status(500).send('Error making sql request: ' + err.stack);
-          }
-          else {
-              res.status(200).send('POST to visitor Successful!');
-          }
-        })
-    }
-    else {
-      res.status(400).send('Error with JSON body format! ' + v.err)
-    }
-  }
-  else {
-    res.status(400).send('Did you forget to set your content-type header to json?')
-  }
+  res.status(410).send('DEPRECATED: Refernce the API Documentation and use POST: /addpersonnel/{type} instead.')
+  // if (req.get('Content-Type') == 'application/json') {
+  //   var person = req.body;
+  //   var v = validator.visitor(person);
+  //
+  //   if (v.valid) {
+  //     jsonString = JSON.stringify(v.person);
+  //     apiPool.request().input('json', sql.VarChar(8000), jsonString)
+  //       .execute('person_insert', (err) => {
+  //         if (err) {
+  //             res.status(500).send('Error making sql request: ' + err.stack);
+  //         }
+  //         else {
+  //             res.status(200).send('POST to visitor Successful!');
+  //         }
+  //       })
+  //   }
+  //   else {
+  //     res.status(400).send('Error with JSON body format! ' + v.err)
+  //   }
+  // }
+  // else {
+  //   res.status(400).send('Did you forget to set your content-type header to json?')
+  // }
 })
 
 /* Inserts a new Personnel Record into the TADS database */
 router.post('/client', function (req, res) {
-  if (req.get('Content-Type') == 'application/json') {
-    var person = req.body;
-    var v = validator.client(person);
-
-    if (v.valid) {
-      jsonString = JSON.stringify(v.person);
-      apiPool.request().input('json', sql.VarChar(8000), jsonString)
-        .execute('person_insert', (err) => {
-          if (err) {
-            res.status(500).send('Error making sql request: ' + err.stack);
-          }
-          else {
-            res.status(200).send('POST to client Successful!');
-          }
-        })
-    }
-    else {
-      res.status(400).send('Error with JSON body format! ' + v.err)
-    }
-  }
-  else {
-    res.status(400).send('Did you forget to set your content-type header to json?')
-  }
+  res.status(410).send('DEPRECATED: Refernce the API Documentation and use POST: /addpersonnel/{type} instead.')
+  // if (req.get('Content-Type') == 'application/json') {
+  //   var person = req.body;
+  //   var v = validator.client(person);
+  //
+  //   if (v.valid) {
+  //     jsonString = JSON.stringify(v.person);
+  //     apiPool.request().input('json', sql.VarChar(8000), jsonString)
+  //       .execute('person_insert', (err) => {
+  //         if (err) {
+  //           res.status(500).send('Error making sql request: ' + err.stack);
+  //         }
+  //         else {
+  //           res.status(200).send('POST to client Successful!');
+  //         }
+  //       })
+  //   }
+  //   else {
+  //     res.status(400).send('Error with JSON body format! ' + v.err)
+  //   }
+  // }
+  // else {
+  //   res.status(400).send('Did you forget to set your content-type header to json?')
+  // }
 })
 
 /* Inserts a new status to the JCE_Tag_MasterList table */
@@ -269,8 +273,19 @@ router.get('/views/current_tags', function (req, res) {
   })
 })
 
-router.get('/views/current_tags/status', function (req, res) {
+router.get('/views/all_tags/status', function (req, res) {
   apiPool.request().query('SELECT * FROM V_JCE_CurrentTagStatusCount FOR JSON AUTO', (err, result) => {
+    if (err) {
+      res.status(500).send('Error making sql request: ' + err.stack);
+    }
+    else {
+      res.status(200).send(result.recordset[0]);
+    }
+  })
+})
+
+router.get('/views/all_tags', function (req, res) {
+  apiPool.request().query('SELECT * FROM V_JCE_AllTags FOR JSON AUTO', (err, result) => {
     if (err) {
       res.status(500).send('Error making sql request: ' + err.stack);
     }
