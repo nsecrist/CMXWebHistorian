@@ -3,7 +3,7 @@ info:
   description: >-
     This is the JCE TADS Web Application API used to interact with the TADS
     database.
-  version: 1.0.0
+  version: 1.0.1
   title: JCE TADS API
   contact:
     email: nathan.secrist@jacobs.com
@@ -262,7 +262,98 @@ paths:
               $ref: '#/definitions/statusCount'
         '500':
           description: Generic SQL Error
+  /views/assigned_tags_with_personnel:
+    get:
+      tags:
+        - Views
+      summary: Provides a list of all assigned tags joined with personnel data
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/assignedTagPersonnel'
+        '500':
+          description: Generic SQL Error
+  /views/lost_tags:
+    get:
+      tags:
+        - Views
+      summary: Provides a list of all lost tags
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/tag'
+        '500':
+          description: Generic SQL Error
 definitions:
+  assignedTagPersonnel:
+    description: TADS object returned from assigned tags with personnel view
+    type: object
+    required:
+      - MAC_Address
+      - Tag_Status
+      - StatusDate
+      - JCE_PID
+      - DateAssigned
+    properties:
+      MAC_Address:
+        type: string
+        example: '1122334455'
+      Tag_Status:
+        type: string
+        enum:
+          - ASSIGNED
+          - AVAILABLE
+          - INACTIVE
+          - LOST
+        example: 'ASSIGNED'
+      StatusDate:
+        type: string
+        example: '2017-09-14 16:07:03.137'
+      JCE_PID:
+        type: integer
+        format: Int64
+        example: 1
+      DateAssigned:
+        type: string
+        example: '2017-09-14 16:07:03.137'
+      FirstName:
+        type: string
+        example: John
+      LastName:
+        type: string
+        example: Doe
+      MiddleName:
+        type: string
+        example: Francis
+      LocalJacobsBadgeID:
+        type: string
+        example: '1001'
+      Skill:
+        type: string
+        example: CAREPENTER
+        description: This field is sometimes NULL
+      PersonnelRole:
+        type: string
+        enum:
+          - Client
+          - Craft
+          - Staff
+          - Sub
+          - Visitor
+        example: Client
+      Company:
+        type: string
+        example: Jacobs
   statusCount:
     description: TADS object returned from all tags status view
     type: object
@@ -448,7 +539,7 @@ definitions:
       DateAssigned:
         type: string
         example: '2017-08-01 00:00:00.000'
-host: 10.4.201.17:3000
-basePath: /tads/api/v1
+# host: 10.4.201.17:3000
+# basePath: http://10.4.17:3000/tads/api/v1
 schemes:
   - http
