@@ -48,7 +48,7 @@ exports.RefreshLookup = function() {
 
 
 /**
- * pidAssigned - Provides a way to check if a tag is currently assigned to a pid
+ * pidAssigned - Provides a way to check if a pid is currently assigned to a tag
  *
  * @param  {int} pPid     The JCE_PID to look up in the hTable
  * @return {boolean}      Returns True if the provided pid is already assigned a Tag
@@ -57,6 +57,26 @@ exports.pidAssigned = function(pPid) {
   if (hTable != undefined) {
     for (var i = 0; i < hTable.length; i++) {
       if (hTable[i].JCE_PID == pPid) {
+        return true;
+      }
+    }
+    return false;
+  }
+  else {
+   return false;
+  }
+}
+
+/**
+ * macAssigned - Provides a way to check if a tag is currently assigned to a pid
+ *
+ * @param  {int} pDeviceID     The deviceID to look up in the hTable
+ * @return {boolean}      Returns True if the provided tag is already assigned a pid
+ */
+exports.macAssigned = function(pDeviceID) {
+  if (hTable != undefined) {
+    for (var i = 0; i < hTable.length; i++) {
+      if (hTable[i].MAC_Address == pDeviceID) {
         return true;
       }
     }

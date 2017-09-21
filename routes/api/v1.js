@@ -206,7 +206,7 @@ router.post('/tag/status', function (req, res) {
 router.post('/associate', function (req, res) {
   if (req.get('Content-Type') == 'application/json') {
     associate = req.body;
-    if (!pid.pidAssigned(associate.jce_pid)) {
+    if (!pid.pidAssigned(associate.jce_pid) && !pid.macAssigned(associate.mac_address)) {
       apiPool.request()
         .input('mac', sql.VarChar(12), associate.mac_address)
         .input('pid', sql.Int, associate.jce_pid)
@@ -222,7 +222,7 @@ router.post('/associate', function (req, res) {
         })
     }
     else {
-      res.status(409).send(associate.jce_pid + ' pid currently has an associated tag, please unassociate before trying again.');
+      res.status(409).send('Conflict, JCE_PID or MAC_ADDRESS already in use.');
     }
   }
   else {
