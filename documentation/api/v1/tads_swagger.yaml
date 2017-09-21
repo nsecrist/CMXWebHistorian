@@ -448,7 +448,7 @@ definitions:
       DateAssigned:
         type: string
         example: '2017-08-01 00:00:00.000'
-# host: 10.4.201.17:3000
-# basePath: http://10.4.17:3000/tads/api/v1
+host: 10.4.201.17:3000
+basePath: /tads/api/v1
 schemes:
   - http

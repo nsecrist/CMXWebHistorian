@@ -295,6 +295,39 @@ router.get('/views/all_tags', function (req, res) {
   })
 })
 
+router.get('/views/assigned_tags_with_personnel', function (req, res) {
+  apiPool.request().query('SELECT * FROM V_JCE_AssignedTagsWithPersonnel FOR JSON AUTO', (err, result) => {
+    if (err) {
+      res.status(500).send('Error making sql request: ' + err.stack);
+    }
+    else {
+      res.status(200).send(result.recordset[0]);
+    }
+  })
+})
+
+router.get('/views/lost_tags', function (req, res) {
+  apiPool.request().query('SELECT * FROM V_JCE_LostTags FOR JSON AUTO', (err, result) => {
+    if (err) {
+      res.status(500).send('Error making sql request: ' + err.stack);
+    }
+    else {
+      res.status(200).send(result.recordset[0]);
+    }
+  })
+})
+
+router.get('/views/current_tags_detail', function (req, res) {
+  apiPool.request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
+    if (err) {
+      res.status(500).send('Error making sql request: ' + err.stack);
+    }
+    else {
+      res.status(200).send(result.recordset[0]);
+    }
+  })
+})
+
 router.get('/tags/available_tags', function (req, res) {
   res.status(410).send('DEPRECATED: Use /views/available_tags instead.');
 })
