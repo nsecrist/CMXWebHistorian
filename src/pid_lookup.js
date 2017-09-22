@@ -26,7 +26,7 @@ exports.RefreshLookup = function() {
       return false;
     }
     else {
-      new sql.Request().query('SELECT * FROM V_JCE_CurrentTags FOR JSON AUTO', (err, result) => {
+      new sql.Request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
         if (err) {
           sql.close();
           console.log("Error refreshing PID Hashtable: " + err);
@@ -106,6 +106,7 @@ exports.Lookup = function(pNotification) {
     for (var i = 0; i < hTable.length; i++) {
       if (hTable[i].MAC_Address == pNotification.deviceId.replace(/:/g, "").toUpperCase()) {
         pNotification.jce_pid = hTable[i].JCE_PID;
+        pNotification.crewcode = hTable[i].CrewCode;
         found = true;
         break;
       }
