@@ -89,8 +89,13 @@ function personnelPost(pRes, pV) {
           pRes.status(500).send('Error making sql request: ' + err.stack);
         }
         else {
-          // Send status 201 + newly created personnel object in bodyParser
-          pRes.status(201).send(result.recordset[0][0]);
+          try {
+            // Send status 201 + newly created personnel object in bodyParser
+            pRes.status(201).send(result.recordset[0][0]);
+          }
+          catch (err) {
+            pRes.status(500).send('Unable to return recently created resource.');
+          }
         }
       })
   }
@@ -226,7 +231,7 @@ router.post('/associate', function (req, res) {
     }
   }
   else {
-    res.status(400).send('Did you forget to set your content-type header to json?')
+    res.status(400).send('Did you forget to set your content-type header to json?');
   }
 })
 

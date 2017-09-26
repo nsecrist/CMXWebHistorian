@@ -71,9 +71,13 @@ paths:
       parameters:
         - name: type
           in: path
-          description: Type of person to fetch
+          description: Type of person to fetch [sub, visitor, client]
           required: true
           type: string
+          enum:
+            - sub
+            - visitor
+            - client
       responses:
         '201':
           description: Created
