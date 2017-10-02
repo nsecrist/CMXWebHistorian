@@ -20,7 +20,7 @@ exports.client = function(input) {
     err = ' - Missing LastName';
   };
   if(input.personnelrole != 'Client') {
-    input.person = 'Client'
+    input.personnelrole = 'Client'
   };
   if(input.company != "INEOS") {
     input.company = "INEOS";
@@ -55,7 +55,7 @@ exports.subcontractor = function(input) {
     err = ' - Missing LastName';
   };
   if(input.personnelrole != 'Sub') {
-    input.person = 'Sub'
+    input.personnelrole = 'Sub'
   };
   if(input.company == null) {
     isValid = false;

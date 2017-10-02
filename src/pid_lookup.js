@@ -26,7 +26,7 @@ exports.RefreshLookup = function() {
       return false;
     }
     else {
-      new sql.Request().query('SELECT * FROM V_JCE_CurrentTags FOR JSON AUTO', (err, result) => {
+      new sql.Request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
         if (err) {
           sql.close();
           console.log("Error refreshing PID Hashtable: " + err);
@@ -46,11 +46,52 @@ exports.RefreshLookup = function() {
   })
 }
 
+
+/**
+ * pidAssigned - Provides a way to check if a pid is currently assigned to a tag
+ *
+ * @param  {int} pPid     The JCE_PID to look up in the hTable
+ * @return {boolean}      Returns True if the provided pid is already assigned a Tag
+ */
+exports.pidAssigned = function(pPid) {
+  if (hTable != undefined) {
+    for (var i = 0; i < hTable.length; i++) {
+      if (hTable[i].JCE_PID == pPid) {
+        return true;
+      }
+    }
+    return false;
+  }
+  else {
+   return false;
+  }
+}
+
+/**
+ * macAssigned - Provides a way to check if a tag is currently assigned to a pid
+ *
+ * @param  {int} pDeviceID     The deviceID to look up in the hTable
+ * @return {boolean}      Returns True if the provided tag is already assigned a pid
+ */
+exports.macAssigned = function(pDeviceID) {
+  if (hTable != undefined) {
+    for (var i = 0; i < hTable.length; i++) {
+      if (hTable[i].MAC_Address == pDeviceID) {
+        return true;
+      }
+    }
+    return false;
+  }
+  else {
+   return false;
+  }
+}
+
 /**
  * Lookup - Returns a Notification object with the jce.pid attribute added
  *
  * @param  {object} pNotification Notification object from CMX
- * @return {object}           Notification object with jce_pid attribute set
+ * @return {object}               Notification object with jce_pid attribute set
  */
 exports.Lookup = function(pNotification) {
   var found = false;
@@ -65,6 +106,7 @@ exports.Lookup = function(pNotification) {
     for (var i = 0; i < hTable.length; i++) {
       if (hTable[i].MAC_Address == pNotification.deviceId.replace(/:/g, "").toUpperCase()) {
         pNotification.jce_pid = hTable[i].JCE_PID;
+        pNotification.crewcode = hTable[i].CrewCode;
         found = true;
         break;
       }

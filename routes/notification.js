@@ -30,9 +30,9 @@ router.post('/', function(req, res) {
   console.log(utcDate + " -- POST to notification received.")
 
   // needed for the fs.appendfile debug output below
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir);
-  }
+  // if (!fs.existsSync(dataDir)) {
+  //   fs.mkdirSync(dataDir);
+  // }
 
   // Get the notification
   var notification = req.body.notifications[0];
@@ -50,7 +50,7 @@ router.post('/', function(req, res) {
   // console.log(body);
 
   // more debug output
-  fs.appendFile(path.join(dataDir, 'data.json'), body + '\n');
+  // fs.appendFile(path.join(dataDir, 'data.json'), body + '\n');
 
   const pool = new sql.ConnectionPool(config, err => {
     pool.request()
@@ -96,6 +96,11 @@ router.post('/', function(req, res) {
         }
   });
   res.sendStatus(200);
+});
+
+/* GET notification page. */
+router.post('/battery_life', function(req, res, next) {
+  notification = req.body.notifications[0]
 });
 
 module.exports = router;

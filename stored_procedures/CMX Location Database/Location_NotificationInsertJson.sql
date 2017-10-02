@@ -8,8 +8,8 @@ GO
 ALTER PROCEDURE [dbo].[Location_NotificationInsertJson](@Location_NotificationJson NVARCHAR(MAX))
 AS BEGIN
 
-	INSERT INTO Location_Notification([subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateLat],[geoCoordinateLong],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID])
-	SELECT [subscriptionName],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateLat],[geoCoordinateLong],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID]
+	INSERT INTO Location_Notification([subscriptionName],[eventId],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateLat],[geoCoordinateLong],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID],[crewcode])
+	SELECT [subscriptionName],[eventId],[locationMapHierarchy],[locationCoordinateX],[locationCoordinateY],[locationCoordinateZ],[locationCoordinateUnit],[geoCoordinateLat],[geoCoordinateLong],[geoCoordinateUnit],[confidenceFactor],[apMacAddress],[ssid],[band],[floorId],[entity],[deviceId],[lastSeen],[timestamp],[JCE_PID],[crewcode]
 	FROM OPENJSON(@Location_NotificationJson)
 		WITH (
 			[subscriptionName] nvarchar(256) 'lax $.subscriptionName',
@@ -35,7 +35,8 @@ AS BEGIN
 			[deviceId] nchar(34) 'lax $.deviceId',
 			[lastSeen] varchar(128) '$.lastSeen',
 			[timestamp] nchar(15) '$.timestamp',
-			[JCE_PID] int 'strict $.jce_pid')
+			[JCE_PID] int 'strict $.jce_pid',
+			[crewcode] varchar(4) 'lax $.crewcode')
 			--[rawX] int '$.rawLocation."rawX"',
 			--[rawY] int '$.rawLocation."rawY"',
 			--[rawUnit] nvarchar(64) '$.rawLocation."unit"')
