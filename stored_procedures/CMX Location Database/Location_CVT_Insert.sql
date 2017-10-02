@@ -24,7 +24,7 @@ AS BEGIN
 			[locationCoordinateY] float 'lax $.locationCoordinate.y',
 			[locationCoordinateZ] float 'lax $.locationCoordinate.z',
 			[locationCoordinateUnit] nvarchar(64) 'lax $.locationCoordinate.unit',
-			[geoCoordinateLat] float 'lax $.geoCoordinate.lattitude',
+			[geoCoordinateLat] float 'lax $.geoCoordinate.latitude',
 			[geoCoordinateLong] float 'lax $.geoCoordinate.longitude',
 			[geoCoordinateUnit] nvarchar(64) 'lax $.geoCoordinate.unit',
 			[JCE_PID] int 'strict $.jce_pid'
