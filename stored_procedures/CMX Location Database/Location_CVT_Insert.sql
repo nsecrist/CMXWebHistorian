@@ -1,6 +1,6 @@
 USE [JCE]
 GO
-/****** Object:  StoredProcedure [dbo].[Location_CVT_Insert]    Script Date: 9/12/2017 8:03:39 PM ******/
+/****** Object:  StoredProcedure [dbo].[Location_CVT_Insert]    Script Date: 10/4/2017 2:59:33 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17,7 +17,7 @@ AS BEGIN
 		FROM
 			OPENJSON(@Location_NotificationJson)
         WITH
-		 (	[deviceId] nchar(34) 'lax $.deviceId',
+		 (	[deviceId] nchar(34) 'strict $.deviceId',
 			[lastSeen] varchar(128) '$.lastSeen',
 			[locationMapHierarchy] nvarchar(256) 'lax $.locationMapHierarchy',
 			[locationCoordinateX] float 'lax $.locationCoordinate.x',
@@ -33,8 +33,7 @@ AS BEGIN
   ON (C.deviceId = InputJSON.deviceId)
     WHEN MATCHED THEN
       UPDATE
-		SET C.deviceId = InputJSON.deviceId,
-			C.lastSeen = InputJSON.lastSeen,
+		SET C.lastSeen = InputJSON.lastSeen,
 			C.locationMapHierarchy = InputJSON.locationMapHierarchy,
 			C.locationCoordinateX = InputJSON.locationCoordinateX,
 			C.locationCoordinateY = InputJSON.locationCoordinateY,

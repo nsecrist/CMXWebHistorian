@@ -6,17 +6,18 @@ var sql = require('mssql/msnodesqlv8');
 var db = require('../src/db.js');
 var pid = require('../src/pid_lookup.js');
 
-// var config = {
-//   driver: 'msnodesqlv8',
-//   connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={SecristTestDB};Trusted_Connection={yes};'
-// }
-
 var config = db.tads();
 
 var dataDir = './public/data/'
 
 const parameter = 'Location_NotificationJson';
 const sp = 'Location_NotificationInsertJson';
+
+const pool = new sql.ConnectionPool(config, err => {
+  if (err) {
+    console.log('Failed to open a SQL Database connection.', err.stack);
+  }
+});
 
 /* GET notification page. */
 router.get('/', function(req, res, next) {
@@ -25,9 +26,9 @@ router.get('/', function(req, res, next) {
 
 /* POST Notification from CMX */
 router.post('/', function(req, res) {
-  var dt = new Date();
-  var utcDate = dt.toUTCString();
-  console.log(utcDate + " -- POST to notification received.")
+  // var dt = new Date();
+  // var utcDate = dt.toUTCString();
+  // console.log(utcDate + " -- POST to notification received.")
 
   // needed for the fs.appendfile debug output below
   // if (!fs.existsSync(dataDir)) {
@@ -52,49 +53,41 @@ router.post('/', function(req, res) {
   // more debug output
   // fs.appendFile(path.join(dataDir, 'data.json'), body + '\n');
 
-  const pool = new sql.ConnectionPool(config, err => {
+  pool.request()
+    .input(parameter, sql.VarChar(8000), body)
+    .execute(sp, (err) => {
+      // ... error checks
+      if (err) {
+        console.log(err);
+        var dt = new Date();
+        var utcDate = dt.toUTCString();
+        result = utcDate + ' -- ' + sp + ' failed.'
+      }
+      else {
+        var dt = new Date();
+        var utcDate = dt.toUTCString();
+        result = utcDate + ' -- ' + sp + ' was successful.'
+      }
+      // console.log(result);
+    });
+
     pool.request()
       .input(parameter, sql.VarChar(8000), body)
-      .execute(sp, (err) => {
+      .execute('Location_CVT_Insert', (err) => {
         // ... error checks
         if (err) {
           console.log(err);
           var dt = new Date();
           var utcDate = dt.toUTCString();
-          result = utcDate + ' -- ' + sp + ' failed.'
+          result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' failed.'
         }
         else {
           var dt = new Date();
           var utcDate = dt.toUTCString();
-          result = utcDate + ' -- ' + sp + ' was successful.'
+          result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' was successful.'
         }
-        console.log(result);
+        // console.log(result);
       });
-      if (err) {
-        console.log(err);
-      }
-
-      pool.request()
-        .input(parameter, sql.VarChar(8000), body)
-        .execute('Location_CVT_Insert', (err) => {
-          // ... error checks
-          if (err) {
-            console.log(err);
-            var dt = new Date();
-            var utcDate = dt.toUTCString();
-            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' failed.'
-          }
-          else {
-            var dt = new Date();
-            var utcDate = dt.toUTCString();
-            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' was successful.'
-          }
-          console.log(result);
-        });
-        if (err) {
-          console.log(err);
-        }
-  });
   res.sendStatus(200);
 });
 

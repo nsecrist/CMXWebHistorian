@@ -99,6 +99,9 @@ function personnelPost(pRes, pV) {
         }
       })
   }
+  else {
+    pRes.status(400).send('Malformed JSON Object Body, reference the TADS API');
+  }
 }
 
 /* Inserts a new Personnel Record into the TADS database */
