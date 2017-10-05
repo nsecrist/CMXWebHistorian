@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var db = require('./src/db.js');
+var dash = require('appmetrics-dash').monitor();
 
 // Routes
 var index = require('./routes/index');
@@ -13,6 +15,7 @@ var notification = require('./routes/notification');
 var realTime = require ('./routes/real_time');
 var test = require ('./routes/test');
 var apiV1 = require ('./routes/api/v1');
+var apiDoc = require ('./routes/apidoc.js');
 
 var app = express();
 
@@ -36,6 +39,7 @@ app.use('/notification', notification);
 app.use('/realtime', realTime);
 app.use('/test', test);
 app.use('/tads/api/v1', apiV1);
+app.use('/api-docs', apiDoc);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
