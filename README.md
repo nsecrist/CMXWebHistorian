@@ -19,6 +19,8 @@ TODO: Write a project description
 
 To start the CMX Web Historian, type and execute `npm run forever` from the root directory.
 
+Application metrics can be viewed at `http://localhost:3001/appmetrics-dash/`.
+
 ## Contributing
 
 1. Fork it!
