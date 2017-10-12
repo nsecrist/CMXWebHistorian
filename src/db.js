@@ -6,13 +6,13 @@
 
 const tads = {
   driver: 'msnodesqlv8'
-  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE_2};Trusted_Connection={yes};'
+  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost\\JCE};Database={JCE};Trusted_Connection={yes};'
   ,parseJSON: true
 }
 
 const cmx = {
   driver: 'msnodesqlv8'
-  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost};Database={JCE_2};Trusted_Connection={yes};'
+  ,connectionString: 'Driver={SQL Server Native Client 11.0};Server={localhost\\JCE};Database={JCE};Trusted_Connection={yes};'
 }
 
 

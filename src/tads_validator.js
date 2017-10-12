@@ -93,6 +93,9 @@ exports.visitor = function(input) {
   if(input.personnelrole != 'Visitor') {
     input.person = 'Visitor'
   };
+  if(input.company != 'Visitor') {
+    input.company = 'Visitor'
+  };
 
   return response = {
     "valid": isValid,

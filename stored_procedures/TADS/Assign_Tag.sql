@@ -20,7 +20,7 @@ AS BEGIN
 
 	INSERT INTO JCE_Tag_MasterList
 	(MAC_Address, Tag_Status, StatusDate)
-	VALUES (@mac, 'Assigned', @date)
+	VALUES (@mac, 'ASSIGNED', @date)
 
 END
 GO

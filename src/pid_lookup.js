@@ -26,7 +26,7 @@ exports.RefreshLookup = function() {
       return false;
     }
     else {
-      new sql.Request().query('SELECT * FROM V_JCE_CurrentTagsDetail FOR JSON AUTO', (err, result) => {
+      new sql.Request().query('SELECT * FROM V_JCE_CurrentTags FOR JSON AUTO', (err, result) => {
         if (err) {
           sql.close();
           console.log("Error refreshing PID Hashtable: " + err);
