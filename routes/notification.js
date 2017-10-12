@@ -41,9 +41,9 @@ router.post('/', function(req, res) {
   // notification.jce_pid = "-1";
   // body = JSON.stringify(notification);
 
+  var n = pid.Lookup(notification);
   // Pass in the notification object, and return it with the added jce_pid
   // then stringify the object and use it to call the stored procedure
-  body = JSON.stringify(pid.Lookup(notification));
 
   // json = body.substring(18, body.lastIndexOf('}')-1);
 
@@ -52,42 +52,45 @@ router.post('/', function(req, res) {
 
   // more debug output
   // fs.appendFile(path.join(dataDir, 'data.json'), body + '\n');
-
-  pool.request()
-    .input(parameter, sql.VarChar(8000), body)
-    .execute(sp, (err) => {
-      // ... error checks
-      if (err) {
-        console.log(err);
-        var dt = new Date();
-        var utcDate = dt.toUTCString();
-        result = utcDate + ' -- ' + sp + ' failed.'
-      }
-      else {
-        var dt = new Date();
-        var utcDate = dt.toUTCString();
-        result = utcDate + ' -- ' + sp + ' was successful.'
-      }
-      // console.log(result);
-    });
+  if (n.jce_pid != '-1') {
+    body = JSON.stringify(n);
 
     pool.request()
       .input(parameter, sql.VarChar(8000), body)
-      .execute('Location_CVT_Insert', (err) => {
+      .execute(sp, (err) => {
         // ... error checks
         if (err) {
           console.log(err);
           var dt = new Date();
           var utcDate = dt.toUTCString();
-          result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' failed.'
+          result = utcDate + ' -- ' + sp + ' failed.'
         }
         else {
           var dt = new Date();
           var utcDate = dt.toUTCString();
-          result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' was successful.'
+          result = utcDate + ' -- ' + sp + ' was successful.'
         }
         // console.log(result);
       });
+
+      pool.request()
+        .input(parameter, sql.VarChar(8000), body)
+        .execute('Location_CVT_Insert', (err) => {
+          // ... error checks
+          if (err) {
+            console.log(err);
+            var dt = new Date();
+            var utcDate = dt.toUTCString();
+            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' failed.'
+          }
+          else {
+            var dt = new Date();
+            var utcDate = dt.toUTCString();
+            result = utcDate + ' -- ' + 'Location_CVT_Insert' + ' was successful.'
+          }
+          // console.log(result);
+        });
+      }
   res.sendStatus(200);
 });
 
