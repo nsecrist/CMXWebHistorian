@@ -17,7 +17,7 @@ TODO: Write a project description
 
 ## Usage
 
-TODO: Write usage instructions
+To start the CMX Web Historian, type and execute `npm run forever` from the root directory.
 
 ## Contributing
 
