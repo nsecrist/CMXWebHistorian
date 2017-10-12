@@ -36,6 +36,7 @@ CREATE TABLE [dbo].[Location_Notification](
 	[rawY] [int] NULL,
 	[rawUnit] [nvarchar](32) NULL,
 	[timestamp] [nchar](15) NULL,
-	[notificationType] [nvarchar](128) NULL
+	[notificationType] [nvarchar](128) NULL,
+	[crewcode] varchar(4) NULL
 ) ON [PRIMARY]
 GO
