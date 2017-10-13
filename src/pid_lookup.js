@@ -76,7 +76,7 @@ exports.pidAssigned = function(pPid) {
 exports.macAssigned = function(pDeviceID) {
   if (hTable != undefined) {
     for (var i = 0; i < hTable.length; i++) {
-      if (hTable[i].MAC_Address == pDeviceID) {
+      if (hTable[i].MAC_Address == pDeviceID.toUpperCase().trim()) {
         return true;
       }
     }
