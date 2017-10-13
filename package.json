@@ -12,6 +12,7 @@
   "dependencies": {
     "appmetrics-dash": "^3.3.3",
     "body-parser": "~1.17.1",
+    "config": "^1.26.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
