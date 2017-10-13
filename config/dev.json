@@ -1,0 +1,3 @@
+{
+  "DBHost": "Driver={SQL Server Native Client 11.0};Server={localhost\\JCE};Database={JCE};Trusted_Connection={yes};"
+}

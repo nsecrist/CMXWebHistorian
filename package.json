@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "watch": "nodemon ./bin/www",
     "install": "node ./install/installer.js",
-    "uninstall": "node ./install/uninstaller.js"
+    "uninstall": "node ./install/uninstaller.js",
+    "test": "mocha --timeout 10000"
   },
   "dependencies": {
     "appmetrics-dash": "^3.3.3",
@@ -24,6 +25,9 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^4.0.1",
     "nodemon": "^1.11.0"
   }
 }
