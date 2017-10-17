@@ -54,6 +54,19 @@ router.get('/personnel/:id', function (req, res) {
     })
 })
 
+/* Deletes record for specified JCE_PID */
+router.delete('/personnel/:id', function (req, res) {
+  apiPool.request().input('input_parameter', sql.Int, req.params.id)
+    .query('DELETE * FROM JCE_Personnel WHERE JCE_PID = @input_parameter', (err, result) => {
+      if (err) {
+        res.status(500).send('Error making sql request: ' + err.stack);
+      }
+      else {
+        res.status(200).send({ jce_pid: req.params.id });
+      }
+    })
+})
+
 router.post('/addpersonnel/:type', function (req, res) {
   if (req.get('Content-Type') == 'application/json') {
 
