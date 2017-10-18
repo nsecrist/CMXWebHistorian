@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../app.js');
+var pid = require('../src/pid_lookup.js');
 var should = chai.should();
 
 chai.use(chaiHttp);
@@ -39,18 +40,18 @@ describe('/GET personnel/{id}', () => {
   });
 });
 
-// Test the GET Personnel route with a non-existant JCE_PID
-describe('/GET personnel/{id}', () => {
-  it('it should GET the specified person', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/personnel/10000'))
-      .end((err, res) => {
-          res.should.have.status(404);
-          res.body.should.be.a('string');
-        done();
-      });
-  });
-});
+// // Test the GET Personnel route with a non-existant JCE_PID
+// describe('/GET personnel/{id}', () => {
+//   it('it should GET the specified person', (done) => {
+//     chai.request(server)
+//       .get(apiRoute.concat('/personnel/10000'))
+//       .end((err, res) => {
+//           res.should.have.status(404);
+//           res.body.should.be.a('string');
+//         done();
+//       });
+//   });
+// });
 
 // Test the addpersonnel/sub router (No payload errors)
 describe('/POST addpersonnel/sub', function (req, res) {
@@ -119,8 +120,17 @@ describe('/POST addpersonnel/visitor', function (req, res) {
   });
 });
 
-// Test associate tag endpoint (No payload errors)
 describe('/POST /associate', function(req, res) {
+
+  before(function() {
+    pid.RefreshLookup();
+  });
+
+  beforeEach(function (done) {
+    setTimeout(done, 1000);
+  })
+
+  // Test associate tag endpoint (No payload errors)
   it('it should respond with a 200 OK status', (done) => {
     chai.request(server)
       .post(apiRoute.concat('/associate'))
@@ -132,10 +142,8 @@ describe('/POST /associate', function(req, res) {
         done();
       });
   });
-});
 
-// Test associate tag endpoint (already assigned tag)
-describe('/POST /associate with duplicate tag', function(req, res) {
+  // Test associate tag endpoint (already assigned tag)
   it('it should respond with a 409 CONFLICT status', (done) => {
     chai.request(server)
       .post(apiRoute.concat('/associate'))
@@ -147,10 +155,8 @@ describe('/POST /associate with duplicate tag', function(req, res) {
         done();
       });
   });
-});
 
-// Test associate tag endpoint (already assigned pid)
-describe('/POST /associate with duplicate pid', function(req, res) {
+  // Test associate tag endpoint (already assigned pid)
   it('it should respond with a 409 CONFLICT status', (done) => {
     chai.request(server)
       .post(apiRoute.concat('/associate'))
@@ -163,6 +169,36 @@ describe('/POST /associate with duplicate pid', function(req, res) {
       });
   });
 });
+
+// // Test associate tag endpoint (already assigned tag)
+// describe('/POST /associate with duplicate tag', function(req, res) {
+//   it('it should respond with a 409 CONFLICT status', (done) => {
+//     chai.request(server)
+//       .post(apiRoute.concat('/associate'))
+//       .set('Content-Type', 'application/json')
+//       .send({ mac_address: '00AA11BB22CC'
+//               ,jce_pid: ids[1] })
+//       .end((err, res) => {
+//           res.should.have.status(409);
+//         done();
+//       });
+//   });
+// });
+
+// Test associate tag endpoint (already assigned pid)
+// describe('/POST /associate with duplicate pid', function(req, res) {
+//   it('it should respond with a 409 CONFLICT status', (done) => {
+//     chai.request(server)
+//       .post(apiRoute.concat('/associate'))
+//       .set('Content-Type', 'application/json')
+//       .send({ mac_address: '11AA11BB22CC'
+//               ,jce_pid: ids[0] })
+//       .end((err, res) => {
+//           res.should.have.status(409);
+//         done();
+//       });
+//   });
+// });
 
 // Test unassociate tag endpoint (no payload errors)
 describe('/POST /unassociate', function(req, res) {
@@ -233,15 +269,7 @@ describe('/GET views/assigned_tags_with_personnel', () => {
 
 // Test the GET views/lost_tags route
 describe('/GET views/lost_tags', () => {
-  it('it should GET all the tags whose status is LOST', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/views/lost_tags'))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('array');
-        done();
-      });
-  });
+  it('it should GET all the tags whose status is LOST');
 });
 
 // Test the GET views/current_tags_detail route

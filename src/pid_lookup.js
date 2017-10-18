@@ -36,8 +36,7 @@ exports.RefreshLookup = function() {
       hTable = result.recordset[0];
       // console.log("hTable: " + hTable);
       // res.status(200).send(result.recordset[0]);
-      sql.close();
-      // console.log("Sucessful Hashtable refresh!");
+      console.log("Sucessful Hashtable refresh!");
       return true;
     }
   })

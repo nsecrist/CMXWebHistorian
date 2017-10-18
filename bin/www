@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('cmxwebhistorian:server');
 var http = require('http');
-var pid = require('./src/pid_lookup.js');
 
 /**
  * Get port from environment and store in Express.
@@ -88,6 +87,4 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  pid.RefreshLookup();
-  debug('Refreshed Hashtable (First time)');
 }
