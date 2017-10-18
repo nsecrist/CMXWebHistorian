@@ -13,7 +13,7 @@ const apiRoute = '/tads/api/v1';
 var ids = [];
 
 // Test the GET Personnel route
-describe('/GET personnel', () => {
+describe('/GET personnel', function () {
   it('it should GET all the persons', (done) => {
     chai.request(server)
       .get(apiRoute.concat('/personnel'))
@@ -27,7 +27,7 @@ describe('/GET personnel', () => {
 });
 
 // Test the GET Personnel route with specified JCE_PID
-describe('/GET personnel/{id}', () => {
+describe('/GET personnel/{id}', function () {
   it('it should GET the specified person', (done) => {
     chai.request(server)
       .get(apiRoute.concat('/personnel/1'))
@@ -144,61 +144,50 @@ describe('/POST /associate', function(req, res) {
   });
 
   // Test associate tag endpoint (already assigned tag)
-  it('it should respond with a 409 CONFLICT status', (done) => {
-    chai.request(server)
-      .post(apiRoute.concat('/associate'))
-      .set('Content-Type', 'application/json')
-      .send({ mac_address: '00AA11BB22CC'
-              ,jce_pid: ids[1] })
-      .end((err, res) => {
-          res.should.have.status(409);
-        done();
-      });
+  describe('Unavailable Tag', function () {
+    it('it should respond with a 409 CONFLICT status', (done) => {
+      chai.request(server)
+        .post(apiRoute.concat('/associate'))
+        .set('Content-Type', 'application/json')
+        .send({ mac_address: '00AA11BB22CC'
+                ,jce_pid: ids[1] })
+        .end((err, res) => {
+            res.should.have.status(409);
+          done();
+        });
+    });
   });
 
   // Test associate tag endpoint (already assigned pid)
-  it('it should respond with a 409 CONFLICT status', (done) => {
-    chai.request(server)
-      .post(apiRoute.concat('/associate'))
-      .set('Content-Type', 'application/json')
-      .send({ mac_address: '11AA11BB22CC'
-              ,jce_pid: ids[0] })
-      .end((err, res) => {
-          res.should.have.status(409);
-        done();
-      });
+  describe('Unavailable PID', function () {
+    it('it should respond with a 409 CONFLICT status', (done) => {
+      chai.request(server)
+        .post(apiRoute.concat('/associate'))
+        .set('Content-Type', 'application/json')
+        .send({ mac_address: '11AA11BB22CC'
+                ,jce_pid: ids[0] })
+        .end((err, res) => {
+            res.should.have.status(409);
+          done();
+        });
+    });
+  });
+
+  // Test associate tag endpoint (Test Case Sensitivity)
+  describe('MAC Address case sensitivity', function () {
+    it('it should respond with a 409 CONFLICT status', (done) => {
+      chai.request(server)
+        .post(apiRoute.concat('/associate'))
+        .set('Content-Type', 'application/json')
+        .send({ mac_address: '00aa11bb22cc'
+                ,jce_pid: ids[0] })
+        .end((err, res) => {
+            res.should.have.status(409);
+          done();
+        });
+    });
   });
 });
-
-// // Test associate tag endpoint (already assigned tag)
-// describe('/POST /associate with duplicate tag', function(req, res) {
-//   it('it should respond with a 409 CONFLICT status', (done) => {
-//     chai.request(server)
-//       .post(apiRoute.concat('/associate'))
-//       .set('Content-Type', 'application/json')
-//       .send({ mac_address: '00AA11BB22CC'
-//               ,jce_pid: ids[1] })
-//       .end((err, res) => {
-//           res.should.have.status(409);
-//         done();
-//       });
-//   });
-// });
-
-// Test associate tag endpoint (already assigned pid)
-// describe('/POST /associate with duplicate pid', function(req, res) {
-//   it('it should respond with a 409 CONFLICT status', (done) => {
-//     chai.request(server)
-//       .post(apiRoute.concat('/associate'))
-//       .set('Content-Type', 'application/json')
-//       .send({ mac_address: '11AA11BB22CC'
-//               ,jce_pid: ids[0] })
-//       .end((err, res) => {
-//           res.should.have.status(409);
-//         done();
-//       });
-//   });
-// });
 
 // Test unassociate tag endpoint (no payload errors)
 describe('/POST /unassociate', function(req, res) {
