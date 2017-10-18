@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var db = require('./src/db.js');
 var dash = require('appmetrics-dash').monitor();
+var pid = require('./src/pid_lookup.js');
 
 // Routes
 var index = require('./routes/index');
