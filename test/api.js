@@ -12,34 +12,6 @@ const apiRoute = '/tads/api/v1';
 
 var ids = [];
 
-// Test the GET Personnel route
-describe('/GET personnel', function () {
-  it('it should GET all the persons', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/personnel'))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('array');
-          res.body.length.should.be.above(0);
-        done();
-      });
-  });
-});
-
-// Test the GET Personnel route with specified JCE_PID
-describe('/GET personnel/{id}', function () {
-  it('it should GET the specified person', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/personnel/1'))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('object');
-          res.body.should.have.property('JCE_PID', 1);
-        done();
-      });
-  });
-});
-
 // // Test the GET Personnel route with a non-existant JCE_PID
 // describe('/GET personnel/{id}', () => {
 //   it('it should GET the specified person', (done) => {
@@ -120,6 +92,34 @@ describe('/POST addpersonnel/visitor', function (req, res) {
   });
 });
 
+// Test the GET Personnel route
+describe('/GET personnel', function () {
+  it('it should GET all the persons', (done) => {
+    chai.request(server)
+      .get(apiRoute.concat('/personnel'))
+      .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('array');
+          res.body.length.should.be.above(0);
+        done();
+      });
+  });
+});
+
+// Test the GET Personnel route with specified JCE_PID
+describe('/GET personnel/{id}', function () {
+  it('it should GET the specified person', (done) => {
+    chai.request(server)
+      .get(apiRoute.concat('/personnel/' + ids[0]))
+      .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          res.body.should.have.property('JCE_PID', ids[0]);
+        done();
+      });
+  });
+});
+
 describe('/POST /associate', function(req, res) {
 
   before(function() {
@@ -189,6 +189,19 @@ describe('/POST /associate', function(req, res) {
   });
 });
 
+// Test the GET views/assigned_tags_with_personnel route
+describe('/GET views/assigned_tags_with_personnel', () => {
+  it('it should GET all the assigned tags and associated jce_pid', (done) => {
+    chai.request(server)
+      .get(apiRoute.concat('/views/assigned_tags_with_personnel'))
+      .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('array');
+        done();
+      });
+  });
+});
+
 // Test unassociate tag endpoint (no payload errors)
 describe('/POST /unassociate', function(req, res) {
   it('it should respond with a 200 OK status', (done) => {
@@ -235,19 +248,6 @@ describe('/GET views/all_tags/status', () => {
   it('it should GET all the status of tags', (done) => {
     chai.request(server)
       .get(apiRoute.concat('/views/all_tags/status'))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('array');
-        done();
-      });
-  });
-});
-
-// Test the GET views/assigned_tags_with_personnel route
-describe('/GET views/assigned_tags_with_personnel', () => {
-  it('it should GET all the assigned tags and associated jce_pid', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/views/assigned_tags_with_personnel'))
       .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.an('array');
