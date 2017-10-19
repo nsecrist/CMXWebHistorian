@@ -92,31 +92,33 @@ describe('/POST addpersonnel/visitor', function (req, res) {
   });
 });
 
-// Test the GET Personnel route
-describe('/GET personnel', function () {
-  it('it should GET all the persons', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/personnel'))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('array');
-          res.body.length.should.be.above(0);
-        done();
-      });
+describe('/GET /personnel', function () {
+  // Test the GET Personnel route
+  describe('All Personnel', function () {
+    it('it should GET all the persons', (done) => {
+      chai.request(server)
+        .get(apiRoute.concat('/personnel'))
+        .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.an('array');
+            res.body.length.should.be.above(0);
+          done();
+        });
+    });
   });
-});
 
-// Test the GET Personnel route with specified JCE_PID
-describe('/GET personnel/{id}', function () {
-  it('it should GET the specified person', (done) => {
-    chai.request(server)
-      .get(apiRoute.concat('/personnel/' + ids[0]))
-      .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.an('object');
-          res.body.should.have.property('JCE_PID', ids[0]);
-        done();
-      });
+      // Test the GET Personnel route with specified JCE_PID
+      describe('Specified Person /{id}', function () {
+        it('it should GET the specified person', (done) => {
+          chai.request(server)
+          .get(apiRoute.concat('/personnel/' + ids[0]))
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.have.property('JCE_PID', ids[0]);
+          done();
+        });
+    });
   });
 });
 
