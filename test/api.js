@@ -68,6 +68,8 @@ describe('/POST addpersonnel/client', function (req, res) {
         done();
       });
   });
+
+
 });
 
 // Test the addpersonnel/visitor route (No payload errors)
@@ -107,18 +109,20 @@ describe('/GET /personnel', function () {
     });
   });
 
-      // Test the GET Personnel route with specified JCE_PID
-      describe('Specified Person /{id}', function () {
-        it('it should GET the specified person', (done) => {
-          chai.request(server)
-          .get(apiRoute.concat('/personnel/' + ids[0]))
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.an('object');
-            res.body.should.have.property('JCE_PID', ids[0]);
-          done();
-        });
+  // Test the GET Personnel route with specified JCE_PID
+  describe('Specified Person /{id}', function () {
+    it('it should GET the specified person', (done) => {
+      chai.request(server)
+        .get(apiRoute.concat('/personnel/' + ids[0]))
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          res.body.should.have.property('JCE_PID', ids[0]);
+        done();
+      });
     });
+  
+    it('it should respond with a 404 not found status');
   });
 });
 
