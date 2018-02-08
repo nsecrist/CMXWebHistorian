@@ -60,4 +60,5 @@ typings/
 
 # Custom
 documentation/*/*/bin
-bin/daemon
+bin/daemon/
+daemon
