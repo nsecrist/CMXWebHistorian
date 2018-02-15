@@ -14,16 +14,16 @@ const pool = new sql.ConnectionPool({
     };
 });
 
-const pool_test = new sql.ConnectionPool({
-    user: 'webapp',
-    password: 'webapp',
-    server: 'localhost\\JCE',
-    database: 'JCE_test'
-}, err => {
-    if(err) {
-        console.error(err.name, ':', err.message);
-    };
-});
+// const pool_test = new sql.ConnectionPool({
+//     user: 'webapp',
+//     password: 'webapp',
+//     server: 'localhost\\JCE',
+//     database: 'JCE_test'
+// }, err => {
+//     if(err) {
+//         console.error(err.name, ':', err.message);
+//     };
+// });
 
 /**
  * Adds a PID value to the Tag info retreived from CMX
@@ -52,11 +52,11 @@ var addPersonnelId = Promise.coroutine(function* (pTag) {
 var writeToDB = function(pTag) {
     var input = JSON.stringify(pTag);
     if (pTag.jcePid > -1) {
-        return pool_test.request()
+        return pool.request()
         .input('Location_History_Json', sql.VarChar(8000), input)
         .execute('Location_History_Insert')
         .then(() => {
-            return pool_test.request()
+            return pool.request()
                 .input('Location_History_Json', sql.VarChar(8000), input)
                 .execute('Location_CVT_Insert_Poll');
         })
