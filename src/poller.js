@@ -14,6 +14,17 @@ const pool = new sql.ConnectionPool({
     };
 });
 
+const pool_test = new sql.ConnectionPool({
+    user: 'webapp',
+    password: 'webapp',
+    server: 'localhost\\JCE',
+    database: 'JCE_test'
+}, err => {
+    if(err) {
+        console.error(err.name, ':', err.message);
+    };
+});
+
 /**
  * Adds a PID value to the Tag info retreived from CMX
  * @param {object} pTag - The Tag Object from CMX
@@ -39,10 +50,16 @@ var addPersonnelId = Promise.coroutine(function* (pTag) {
  * @returns {Promise}
  */
 var writeToDB = function(pTag) {
+    var input = JSON.stringify(pTag);
     if (pTag.jcePid > -1) {
-        return pool.request()
-        .input('Location_History_Json', sql.VarChar(8000), JSON.stringify(pTag))
-        .execute('Location_History_Insert');
+        return pool_test.request()
+        .input('Location_History_Json', sql.VarChar(8000), input)
+        .execute('Location_History_Insert')
+        .then(() => {
+            return pool_test.request()
+                .input('Location_History_Json', sql.VarChar(8000), input)
+                .execute('Location_CVT_Insert_Poll');
+        })
     }
     else {
         return new Promise((resolve, reject) => {
@@ -69,7 +86,7 @@ exports.poll = function() {
         console.log("Number of resolved Promises:", results.length);
         return Promise.all(results.map(element => {
             return writeToDB(element);
-        }))
+        }, {concurrency: 10}))
     })
     .then(function() {
         console.log(moment().format('MMMM Do YYYY, h:mm:ss a'), '- Complete!');
